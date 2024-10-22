@@ -1,15 +1,15 @@
 # CST-350 Activity 1 - First Web Application
 
 ## Cover Sheet
-**Student Name:** Alex Frear 
-**Date:** 10/21/2024
-College of Science, Engineering, and Technology, Grand Canyon University  
+**Student Name:** Alex Frear  
+**Date:** 10/21/2024  
+**Program** College of Science, Engineering, and Technology, Grand Canyon University  
 **Course:** CST-350 Programming in C# III  
 **Instructor:** Brandon Bass  
 
 ### Part 1: Screenshots of the Application
 
-Below are screenshots demonstrating the different steps and pages created as part of Activity 1, Part `1 - First Web Application in ASP.NET Core.
+#### Below are screenshots demonstrating the different steps and pages created as part of Activity 1, Part `1 - First Web Application in ASP.NET Core.
 
 #### 1. Project Structure
 <img src="Activity1Screenshots/Part1Screenshots/01_Project_Structure.png" width="500"/>
