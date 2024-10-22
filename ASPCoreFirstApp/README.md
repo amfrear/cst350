@@ -7,8 +7,6 @@
 **Course:** CST-350 Programming in C# III  
 **Instructor:** Brandon Bass  
 
----
-
 ## Part 1: Tools Installation and Default App
 
 **Below are screenshots demonstrating the different steps and pages created as part of Activity 1, Part 1 - First Web Application in ASP.NET Core.**
@@ -55,5 +53,3 @@
 
 ### Summary of Key Concepts
 In Part 1 of this activity, we explored creating a simple ASP.NET Core web application using Visual Studio. Key concepts covered include setting up a project structure, modifying views, adding new pages to the application, and integrating `ViewData` to dynamically pass data from the controller to the view. We also learned how to extend navigation by adding new links to the navbar, demonstrating basic routing and controller action usage in an MVC framework.
-
----
