@@ -7,7 +7,7 @@
 **Course:** CST-350 Programming in C# III  
 **Instructor:** Brandon Bass  
 
-### Part 1: Screenshots of the Application
+### Part 1: Tools Installation and Default App
 
 **Below are screenshots demonstrating the different steps and pages created as part of Activity 1, Part 1 - First Web Application in ASP.NET Core.**
 
