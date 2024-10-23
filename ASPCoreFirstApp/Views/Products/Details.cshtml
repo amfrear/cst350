@@ -1,0 +1,33 @@
+﻿@{
+    var personality = (int?)ViewData["Personality"] ?? 9;
+    string message = "";
+
+    if (personality >= 8)
+    {
+        message = "You have an amazing personality—always bright and full of positivity!";
+    }
+    else if (personality >= 5)
+    {
+        message = "You're doing great! A solid mix of charm and depth.";
+    }
+    else if (personality >= 3)
+    {
+        message = "You're quite mysterious, which adds to your charm!";
+    }
+    else
+    {
+        message = "It seems you're having a moody day—don't worry, we all have them!";
+    }
+}
+
+@if (ViewData["Name"] != null)
+{
+    <h2>Welcome, @ViewData["Name"]!</h2>
+    <p>Your personality rating is @ViewData["Personality"] out of 10.</p>
+    <p>@message</p>
+}
+else
+{
+    <h2>Welcome, visitor!</h2>
+    <p>No parameters were passed.</p>
+}
