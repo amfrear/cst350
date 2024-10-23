@@ -55,6 +55,7 @@
 In Part 1 of this activity, we explored creating a simple ASP.NET Core web application using Visual Studio. Key concepts covered include setting up a project structure, modifying views, adding new pages to the application, and integrating `ViewData` to dynamically pass data from the controller to the view. We also learned how to extend navigation by adding new links to the navbar, demonstrating basic routing and controller action usage in an MVC framework.
 
 ---
+<br>
 
 ## Part 2: Controllers and Views
 
@@ -86,10 +87,6 @@ In Part 1 of this activity, we explored creating a simple ASP.NET Core web appli
 *This screenshot shows the output of the "Message" view, which was created to demonstrate the use of Razor views in ASP.NET Core. The view includes a sample message with basic HTML formatting.*
 
 ### Summary of Key Concepts (Part 2)
-In Part 2 of this activity, we extended the web application by adding new functionality through controllers, views, and JSON data. Key concepts covered include:
-- Creating a new controller (`ProductsController`) and generating views for different actions.
-- Using parameters to pass information from the URL to the controller and dynamically adjusting the view based on the inputs.
-- Returning JSON data from a controller method, demonstrating the ability to serve data for use in APIs or other client applications.
-- Adding and modifying Razor views to create a more dynamic and engaging user interface, using HTML and CSS tags to improve the user experience.
+In Part 2 of this activity, we extended the web application by adding new functionality through controllers, views, and JSON data. We began by creating a new controller called `ProductsController` and generating views for different actions. We explored the use of parameters to pass information from the URL to the controller, which allowed us to dynamically adjust the view based on the inputs. Additionally, we demonstrated how to return JSON data from a controller method, showcasing the ability to serve data for use in APIs or other client applications. We also added and modified Razor views to enhance the user interface, incorporating basic HTML and CSS tags to create a more engaging experience for users. Through these exercises, we demonstrated the power of ASP.NET Core MVC to create interactive and data-driven web applications using routing, controllers, views, and JSON to build a flexible and robust web solution.
 
 These exercises demonstrated the power of ASP.NET Core MVC to create interactive and data-driven web applications, using a combination of routing, controllers, views, and JSON to build a flexible and robust web application.
