@@ -51,5 +51,45 @@
 
 *The Contact Me page showcases another extension of the web application to demonstrate basic user interaction capabilities.*
 
-### Summary of Key Concepts
+### Summary of Key Concepts (Part 1)
 In Part 1 of this activity, we explored creating a simple ASP.NET Core web application using Visual Studio. Key concepts covered include setting up a project structure, modifying views, adding new pages to the application, and integrating `ViewData` to dynamically pass data from the controller to the view. We also learned how to extend navigation by adding new links to the navbar, demonstrating basic routing and controller action usage in an MVC framework.
+
+---
+
+## Part 2: Controllers and Views
+
+- **Below are screenshots demonstrating the different steps and pages created as part of Activity 1, Part 2 - Extending the ASP.NET Core Web Application.**
+
+### 9. Products Index Page
+<img src="Activity1Screenshots/Part2Screenshots/09_Products_Index_Page.png" width="700"/>
+
+*This screenshot shows the initial Products page in the web application. This view was created by adding a new controller named `ProductsController` and generating the "Index" view for it.*
+
+### 10. Products Message Output
+<img src="Activity1Screenshots/Part2Screenshots/10_Products_Message_Output.png" width="700"/>
+
+*This screenshot displays the output of the `Message` method within the `ProductsController`. The method was modified to return a simple message string that is displayed directly in the browser.*
+
+### 11. JSON Output from ProductsController
+<img src="Activity1Screenshots/Part2Screenshots/JSON_Output_ProductsController.png" width="700"/>
+
+*This screenshot shows the JSON data generated from the `Data` method in the `ProductsController`. The JSON includes properties for `orderNumber`, `price`, and `quantity`, demonstrating how to return structured data directly to the browser.*
+
+### 12. Details Page with Parameters
+<img src="Activity1Screenshots/Part2Screenshots/Products_Details_With_Params_Browser.png" width="700"/>
+
+*This screenshot shows the "Details" page of the ProductsController, demonstrating how passing parameters via the URL can affect the view. Here, the name and personality parameters are passed to display a personalized message with a personality rating.*
+
+### 13. Message View with Razor
+<img src="Activity1Screenshots/Part2Screenshots/Products_Message_View_Browser.png" width="700"/>
+
+*This screenshot shows the output of the "Message" view, which was created to demonstrate the use of Razor views in ASP.NET Core. The view includes a sample message with basic HTML formatting.*
+
+### Summary of Key Concepts (Part 2)
+In Part 2 of this activity, we extended the web application by adding new functionality through controllers, views, and JSON data. Key concepts covered include:
+- Creating a new controller (`ProductsController`) and generating views for different actions.
+- Using parameters to pass information from the URL to the controller and dynamically adjusting the view based on the inputs.
+- Returning JSON data from a controller method, demonstrating the ability to serve data for use in APIs or other client applications.
+- Adding and modifying Razor views to create a more dynamic and engaging user interface, using HTML and CSS tags to improve the user experience.
+
+These exercises demonstrated the power of ASP.NET Core MVC to create interactive and data-driven web applications, using a combination of routing, controllers, views, and JSON to build a flexible and robust web application.
