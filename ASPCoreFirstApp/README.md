@@ -12,7 +12,7 @@
 - **Below are screenshots demonstrating the different steps and pages created as part of Activity 1, Part 1 - First Web Application in ASP.NET Core.**
 
 ### 1. Project Structure
-<img src="Activity1Screenshots/Part1Screenshots/01_Project_Structure.png" width="700"/>
+<img src="Activity 1/Activity1Screenshots/Part1Screenshots/01_Project_Structure.png" width="700"/>
 
 *This screenshot shows the project structure of the ASP.NET Core web application in Visual Studio, highlighting the different folders and files used in this project.*
 
