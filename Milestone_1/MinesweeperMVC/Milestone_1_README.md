@@ -51,6 +51,28 @@ Link to the [MinesweeperMVC GitHub Repository](https://gitlab.com/amfrear1/cst35
 
 *This screenshot shows the Start Game page, which is only accessible to logged-in users. The page contains placeholder text.*
 
+## Database Setup
+
+To recreate the database, follow these steps:
+
+1. **Install MySQL**: Ensure that you have MySQL installed on your local machine, along with **MySQL Workbench**.
+2. **Download the SQL File**: The `minesweepermvc_db.sql` file is located here Link to the [MinesweeperMVC Database Schema](https://gitlab.com/amfrear1/cst350/-/tree/main/Milestone_1/MinesweeperMVC?ref_type=heads).
+3. **Open MySQL Workbench**:
+   - Connect to your MySQL instance.
+   - Create a new database/schema.
+4. **Import the SQL Dump**:
+   - Use the Data Import feature in MySQL Workbench.
+   - Select the `minesweepermvc_db.sql` file from the `/Database` folder.
+   - Import the database into the schema you created.
+5. **Update `appsettings.json`**:
+   - Open the `appsettings.json` file in the project.
+   - Update the connection string with your MySQL credentials:
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "server=localhost;port=3306;database=your_db_name;user=your_user;password=your_password;"
+   }
+   ```
+
 ## Summary of Key Concepts
 
 In Milestone 1 of the MinesweeperMVC project, we demonstrated the following key concepts:
