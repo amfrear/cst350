@@ -7,12 +7,12 @@
 **Course:** CST-350 Programming in C# III  
 **Instructor:** Brandon Bass  
 
-## GitHub Repository
-Link to the [MinesweeperMVC GitHub Repository](https://gitlab.com/amfrear1/cst350/-/tree/main/Milestone_1/MinesweeperMVC?ref_type=heads).  
-
 ## Screencast Demonstration
 [Screencast Link - Placeholder](#)  
-*This link will be updated once the screencast is available.*
+*This link will be updated once the screencast is available.*  
+
+## GitHub Repository
+Link to the [MinesweeperMVC GitHub Repository](https://gitlab.com/amfrear1/cst350/-/tree/main/Milestone_1/MinesweeperMVC?ref_type=heads).  
 
 ## Application Screenshots
 
