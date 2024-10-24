@@ -10,6 +10,10 @@
 ## GitHub Repository
 Link to the [MinesweeperMVC GitHub Repository](https://gitlab.com/amfrear1/cst350/-/tree/main/Milestone_1/MinesweeperMVC?ref_type=heads).  
 
+## Screencast Demonstration
+[Screencast Link - Placeholder](#)  
+*This link will be updated once the screencast is available.*
+
 ## Application Screenshots
 
 ### 1. Registration Page
