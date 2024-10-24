@@ -25,6 +25,33 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <!-- Use asp-route to hardcode the URL -->
+                            <a class="nav-link text-dark" href="/Register">Register</a>
+                        </li>
+                    </ul>
+
+                    <!-- Right-side of the Navbar for login/logout -->
+                    <ul class="navbar-nav ml-auto">
+                        @if (Context.Session.GetString("Username") != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Game" asp-action="StartGame">Start Game</a>
+                            </li>
+                            <li class="nav-item">
+                                <span class="nav-link">Welcome, @Context.Session.GetString("Username")</span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Login" asp-action="Logout">Logout</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- Use asp-route to hardcode the URL -->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/Login">Login</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
