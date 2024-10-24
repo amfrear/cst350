@@ -56,7 +56,7 @@ Link to the [MinesweeperMVC GitHub Repository](https://gitlab.com/amfrear1/cst35
 To recreate the database, follow these steps:
 
 1. **Install MySQL**: Ensure that you have MySQL installed on your local machine, along with **MySQL Workbench**.
-2. **Download the SQL File**: The `minesweepermvc_db.sql` file is located here Link to the [MinesweeperMVC Database Schema](https://gitlab.com/amfrear1/cst350/-/tree/main/Milestone_1/MinesweeperMVC?ref_type=heads).
+2. **Download the SQL File**: The `minesweepermvc_db.sql` file is located here: [MinesweeperMVC Database Schema](https://gitlab.com/amfrear1/cst350/-/tree/main/Milestone_1/Database?ref_type=heads).
 3. **Open MySQL Workbench**:
    - Connect to your MySQL instance.
    - Create a new database/schema.
