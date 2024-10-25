@@ -1,0 +1,14 @@
+﻿@model RegisterAndLoginApp.Models.UserModel
+
+@{
+    ViewData["Title"] = "Login Success";
+}
+
+<h2>Login Success</h2>
+
+<p>Welcome, @Model.Username! You have successfully logged in.</p>
+<p>Your Groups: @Model.Groups</p>
+
+<div>
+    <a asp-action="Index" asp-controller="Home">Back to Home</a>
+</div>
