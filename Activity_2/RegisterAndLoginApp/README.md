@@ -11,7 +11,7 @@
 - **Below are screenshots demonstrating the different steps and pages created as part of Activity 2, Part 1 - Building a Login and Registration System in ASP.NET Core.**
 
 ### 1. Home Page with Login and Register Links
-<img src="Activity_2/Activity2Screenshots/Part1Screenshots/01_Home_Page_Login_Register_Links.png" width="700"/>
+<img src="Activity_2/Activity2Screenshots/Part1Screenshots/LoginRegisterLinksView.png" width="700"/>
 
 *This screenshot shows the home page of the application with `Login` and `Register` links in the navigation bar, providing easy access to authentication features.*
 
