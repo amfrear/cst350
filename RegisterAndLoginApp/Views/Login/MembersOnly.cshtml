@@ -1,0 +1,20 @@
+﻿@using ServiceStack.Text
+
+<h1>Private Club</h1>
+<p>Welcome to the private club</p>
+
+@{
+    string? userString = Context.Session.GetString("User");
+    var user = ServiceStack.Text.JsonSerializer.DeserializeFromString<UserModel>(userString);
+
+    if (string.IsNullOrEmpty(userString))
+    {
+        <p>You are not logged in</p>
+    }
+    else
+    {
+        <p>You are logged in as @user.Username</p>
+        <!-- print formatted json -->
+        <pre>@userString</pre>
+    }
+}
