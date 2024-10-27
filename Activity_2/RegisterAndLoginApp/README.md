@@ -21,7 +21,7 @@
 *This screenshot displays the login page, prompting the user to enter their `Username` and `Password` to access the system.*
 
 ### 3. Successful Login
-<img src="../Activity2Screenshots/Part1Screenshots/LoginSuccessView.png" width="700"/>
+<img src="../Activity2Screenshots/Part1Screenshots/LoginSuccessfulView.png" width="700"/>
 
 *The screenshot shows a successful login attempt, displaying the user's account details, including `Username`, `PasswordHash`, `Salt`, and `Groups`.*
 
