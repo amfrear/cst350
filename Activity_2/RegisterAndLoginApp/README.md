@@ -1,4 +1,3 @@
-```markdown
 # CST-350 Activity 2 - Login and Registration System
 
 ## Cover Sheet
