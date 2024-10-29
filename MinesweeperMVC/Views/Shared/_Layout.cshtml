@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="~/MinesweeperMVC.styles.css" asp-append-version="true" />
 </head>
 <body>
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -27,7 +29,7 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav">
-                        @if (Context.Session.GetString("Username") == null)
+                        @if (HttpContextAccessor.HttpContext.Session.GetString("Username") == null)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
@@ -39,10 +41,13 @@
                         else
                         {
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="StartGame">Start Game</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                             </li>
                             <li class="nav-item">
-                                <span class="nav-link text-dark">Welcome, @Context.Session.GetString("Username")!</span>
+                                <span class="nav-link text-dark">Welcome, @HttpContextAccessor.HttpContext.Session.GetString("Username")!</span>
                             </li>
                         }
                     </ul>

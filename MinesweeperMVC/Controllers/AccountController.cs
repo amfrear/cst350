@@ -111,6 +111,21 @@ namespace MinesweeperMVC.Controllers
             }
         }
 
+        // GET: Account/StartGame
+        [HttpGet]
+        public IActionResult StartGame()
+        {
+            // Check if user is logged in
+            if (HttpContext.Session.GetString("Username") == null)
+            {
+                // If not logged in, redirect to login page
+                return RedirectToAction("Login");
+            }
+
+            // If logged in, return the StartGame view
+            return View();
+        }
+
         // GET: Account/Logout
         public IActionResult Logout()
         {

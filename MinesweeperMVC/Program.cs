@@ -29,6 +29,9 @@ namespace MinesweeperMVC
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession();
 
+            // Add IHttpContextAccessor
+            builder.Services.AddHttpContextAccessor();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
