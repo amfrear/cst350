@@ -52,7 +52,7 @@
 
 *This screenshot shows the "Start Game" page. It is only accessible to users who are logged in. Here, the user can proceed to play Minesweeper after logging in.*
 
-### Summary of Key Concepts
+## Summary of Key Concepts
 
 In Milestone 1, I built the foundational components of the MinesweeperMVC application using ASP.NET Core MVC. I implemented user registration and login functionality, including input validation, using ASP.NET Identity. Additionally, I managed user sessions with ASP.NET Core to allow restricted access to specific pages, such as the "Start Game" page. The application was designed using the MVC (Model-View-Controller) architecture, which helped separate data, user interface, and application logic.
 
