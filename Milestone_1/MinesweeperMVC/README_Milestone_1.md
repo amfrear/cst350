@@ -9,13 +9,14 @@
 
 ## Screencast Video
 <div>
-    <a href="https://www.loom.com/share/9be9cb9eda3245258c0205d148a190e1" target="_blank">
+    <a href="https://www.loom.com/share/9be9cb9eda3245258c0205d148a190e1">
       <p>CST 350 - Milestone 1 Login and Registration Modules - Watch Video</p>
     </a>
-    <a href="https://www.loom.com/share/9be9cb9eda3245258c0205d148a190e1" target="_blank">
+*(Tip: Right-click and select "Open link in new tab" to watch the video without leaving the page)*
+    <a href="https://www.loom.com/share/9be9cb9eda3245258c0205d148a190e1">
       <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/9be9cb9eda3245258c0205d148a190e1-807bf83d0e3d5b89-full-play.gif">
     </a>
-</div>
+  </div>
 
 ## Application Overview
 
