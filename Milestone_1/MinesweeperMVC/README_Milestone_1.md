@@ -53,11 +53,9 @@
 *This screenshot shows the "Start Game" page. It is only accessible to users who are logged in. Here, the user can proceed to play Minesweeper after logging in.*
 
 ### Summary of Key Concepts
-In Milestone 1, we built the foundational components of the MinesweeperMVC application using ASP.NET Core MVC. Key concepts demonstrated include:
-- **Registration and Login Functionality:** Implemented a user registration form with input validation and a login system using ASP.NET Identity.
-- **Session Management:** Managed user sessions with ASP.NET Core, allowing restricted access to certain pages, such as the "Start Game" page.
-- **MVC Architecture:** The application followed the MVC (Model-View-Controller) architecture, allowing separation of concerns between data, user interface, and application logic.
-- **Routing and Navigation:** Extended the navigation bar to include "Register," "Login," "Logout," and "Start Game" links, providing easy navigation between the core features.
-- **View Rendering and Data Transfer:** Used ViewData to pass information between controllers and views, ensuring that user actions and page transitions provided a smooth experience.
 
-This milestone emphasized user management and authentication features, setting the stage for the core Minesweeper gameplay features in the following milestones.
+In Milestone 1, I built the foundational components of the MinesweeperMVC application using ASP.NET Core MVC. I implemented user registration and login functionality, including input validation, using ASP.NET Identity. Additionally, I managed user sessions with ASP.NET Core to allow restricted access to specific pages, such as the "Start Game" page. The application was designed using the MVC (Model-View-Controller) architecture, which helped separate data, user interface, and application logic.
+
+To enhance usability, I extended the navigation bar to include links for "Register," "Login," "Logout," and "Start Game," providing easy access to core features. I also used ViewData to transfer information between controllers and views, making user interactions and page transitions smooth.
+
+This milestone focused on building user management and authentication features, setting up the foundation for implementing the core Minesweeper gameplay features in subsequent milestones.
