@@ -9,45 +9,45 @@
 
 ## Screencast Video
 <div>
-    <a href="https://www.loom.com/share/9be9cb9eda3245258c0205d148a190e1">
+    <a href="https://www.loom.com/share/9be9cb9eda3245258c0205d148a190e1" target="_blank">
       <p>CST 350 - Milestone 1 Login and Registration Modules - Watch Video</p>
     </a>
-    <a href="https://www.loom.com/share/9be9cb9eda3245258c0205d148a190e1">
+    <a href="https://www.loom.com/share/9be9cb9eda3245258c0205d148a190e1" target="_blank">
       <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/9be9cb9eda3245258c0205d148a190e1-807bf83d0e3d5b89-full-play.gif">
     </a>
-  </div>
+</div>
 
 ## Application Overview
 
 - **Below are screenshots demonstrating the different steps and pages created as part of Milestone 1 - MinesweeperMVC Application.**
 
 ### 1. Registration Page with Validation
-<img src="screenshots/RegisterFormValidation.png" width="700"/>
+<img src="../Screenshots/RegisterFormValidation.png" width="700"/>
 
 *This screenshot shows the Registration page with all form fields requiring validation. The user must enter a valid First Name, Last Name, Sex, Age, State, Email Address, Username, and Password to register.*
 
 ### 2. Registration Form (Empty)
-<img src="screenshots/RegisterPage.png" width="700"/>
+<img src="../Screenshots/RegisterPage.png" width="700"/>
 
 *This shows the initial view of the Registration page when the user first accesses it.*
 
 ### 3. Registration Success
-<img src="screenshots/RegisterSuccessPage.png" width="700"/>
+<img src="../Screenshots/RegisterSuccessPage.png" width="700"/>
 
 *This screenshot shows the Registration Success page, confirming that the account was successfully created.*
 
 ### 4. Login Page
-<img src="screenshots/LoginPage.png" width="700"/>
+<img src="../Screenshots/LoginPage.png" width="700"/>
 
 *The Login page is used by users to authenticate and access the application using their Username and Password.*
 
 ### 5. Login Success Page
-<img src="screenshots/LoginSuccessPage.png" width="700"/>
+<img src="../Screenshots/LoginSuccessPage.png" width="700"/>
 
 *This screenshot shows the Login Success page that the user is redirected to after a successful login.*
 
 ### 6. Start Game Page (Restricted Access)
-<img src="screenshots/StartGameRestrictedPage.png" width="700"/>
+<img src="../Screenshots/StartGameRestrictedPage.png" width="700"/>
 
 *This screenshot shows the "Start Game" page. It is only accessible to users who are logged in. Here, the user can proceed to play Minesweeper after logging in.*
 
