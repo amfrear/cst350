@@ -8,7 +8,7 @@ using System.Text;
 
 namespace RegisterAndLoginApp.Controllers
 {
-    public class LoginController : Controller
+    public class UserController : Controller
     {
         // Replace UserCollection with UserDAO
         static UserDAO users = new UserDAO();

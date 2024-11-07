@@ -28,13 +28,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Register">Register</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Register</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="MembersOnly">Members Only</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="MembersOnly">Members Only</a>
                         </li>
                         <!-- Admin Only Link (conditional) -->
                         @if (HttpContextAccessor.HttpContext.Session.GetString("User") != null)
@@ -43,13 +43,13 @@
                             if (user.Groups.Contains("Admin"))
                             {
                                         <li class="nav-item">
-                                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="AdminOnly">Admin Only</a>
+                                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="AdminOnly">Admin Only</a>
                                         </li>
                             }
                         }
                         <!-- Logout Link -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
                         </li>
                     </ul>
                 </div>

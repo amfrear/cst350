@@ -12,7 +12,7 @@ namespace RegisterAndLoginApp.Filters
             if (string.IsNullOrEmpty(userString))
             {
                 // Redirect to login if the user is not found in session
-                context.Result = new RedirectToActionResult("Index", "Login", null);
+                context.Result = new RedirectToActionResult("Index", "User", null);
             }
 
             base.OnActionExecuting(context);
