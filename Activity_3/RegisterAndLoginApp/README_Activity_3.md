@@ -13,7 +13,7 @@
 - **This section demonstrates the steps taken to set up a `Users` table in the database, add a new user, and validate the registration and login functionalities.**
 
 ### 1. Users Table Creation
-<img src="Activity_3/Activity3Screenshots/TestDbUsersTableCreation.png" width="700"/>
+<img src="../Activity3Screenshots/Part1Screenshots/TestDbUsersTableCreation.png" width="700"/>
 
 *The screenshot shows the `Users` table created in SQL Server with fields for `Id`, `Username`, `PasswordHash`, `Salt`, and `Groups`, as part of the database setup.*
 
