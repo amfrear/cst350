@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -34,6 +36,17 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="MembersOnly">Members Only</a>
                         </li>
+                        <!-- Admin Only Link (conditional) -->
+                        @if (HttpContextAccessor.HttpContext.Session.GetString("User") != null)
+                        {
+                            var user = ServiceStack.Text.JsonSerializer.DeserializeFromString<UserModel>(HttpContextAccessor.HttpContext.Session.GetString("User"));
+                            if (user.Groups.Contains("Admin"))
+                            {
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="AdminOnly">Admin Only</a>
+                                        </li>
+                            }
+                        }
                         <!-- Logout Link -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>

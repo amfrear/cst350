@@ -4,13 +4,14 @@ using RegisterAndLoginApp.Models;
 using RegisterAndLoginApp.Filters; // Ensure this namespace is included
 using ServiceStack.Text;
 using System.Linq;
+using System.Text;
 
 namespace RegisterAndLoginApp.Controllers
 {
     public class LoginController : Controller
     {
-        // Static instance of UserCollection to manage users
-        static UserCollection users = new UserCollection();
+        // Replace UserCollection with UserDAO
+        static UserDAO users = new UserDAO();
 
         // GET: Login page
         public IActionResult Index()
@@ -71,7 +72,7 @@ namespace RegisterAndLoginApp.Controllers
                 var newUser = new UserModel
                 {
                     Username = registerViewModel.Username,
-                    Salt = "defaultSalt" // Add a default salt for simplicity
+                    Salt = Encoding.UTF8.GetBytes("defaultSalt") // Convert the salt to byte[]
                 };
                 newUser.SetPassword(registerViewModel.Password);
 
@@ -80,7 +81,7 @@ namespace RegisterAndLoginApp.Controllers
                     .Where(g => g.IsSelected)
                     .Select(g => g.GroupName));
 
-                // Add the new user to the collection
+                // Add the new user to the DAO
                 users.AddUser(newUser);
 
                 // Redirect to login page after successful registration
@@ -89,6 +90,12 @@ namespace RegisterAndLoginApp.Controllers
 
             // If the model is invalid, re-display the form with validation messages
             return View(registerViewModel);
+        }
+
+        [AdminCheckFilter]
+        public IActionResult AdminOnly()
+        {
+            return View();
         }
 
         // GET: Logout

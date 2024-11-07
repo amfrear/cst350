@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace RegisterAndLoginApp.Models
 {
@@ -22,14 +23,14 @@ namespace RegisterAndLoginApp.Models
         {
             UserModel user1 = new UserModel();
             user1.Username = "Harry";
-            user1.Salt = "defaultSalt"; // Use a default salt for testing
+            user1.Salt = Encoding.UTF8.GetBytes("defaultSalt"); // Use a default salt for testing
             user1.SetPassword("prince");
             user1.Groups = "Admin";
             AddUser(user1);
 
             UserModel user2 = new UserModel();
             user2.Username = "Megan";
-            user2.Salt = "defaultSalt"; // Use the same salt for simplicity in testing
+            user2.Salt = Encoding.UTF8.GetBytes("defaultSalt"); // Use the same salt for simplicity in testing
             user2.SetPassword("princess");
             user2.Groups = "Admin, User";
             AddUser(user2);

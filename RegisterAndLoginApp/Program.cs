@@ -14,6 +14,7 @@ namespace RegisterAndLoginApp
             builder.Services.AddControllersWithViews();
             builder.Services.AddDistributedMemoryCache(); // Add distributed memory cache for session management
             builder.Services.AddSession(); // Add session services
+            builder.Services.AddHttpContextAccessor(); // Add IHttpContextAccessor for accessing HttpContext in views
 
             var app = builder.Build();
 
