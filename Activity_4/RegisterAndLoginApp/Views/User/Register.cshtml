@@ -1,0 +1,44 @@
+﻿@model RegisterAndLoginApp.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+
+<form asp-action="Register" method="post">
+    <div class="form-group">
+        <label asp-for="Username" class="control-label"></label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password" class="control-label"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Groups</label>
+        @for (int i = 0; i < Model.Groups.Count; i++)
+        {
+            <div class="form-check">
+                <input type="checkbox" asp-for="Groups[@i].IsSelected" class="form-check-input" />
+                <input type="hidden" asp-for="Groups[@i].GroupName" />
+                <label class="form-check-label">@Model.Groups[i].GroupName</label>
+            </div>
+        }
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-controller="User" asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
