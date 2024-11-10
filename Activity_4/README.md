@@ -10,42 +10,38 @@
 ---
 
 ## Part 1: Dependency Injection Overview
-- **This section demonstrates the implementation of dependency injection in `UserController` to use the `IUserManager` interface, allowing for flexibility in selecting different data sources.**
+- **This section demonstrates the implementation of dependency injection in `UserController` to utilize the `IUserManager` interface, allowing for flexibility in selecting different data sources.**
 
 ### 1. Configuring Dependency Injection in `UserController`
-<img src="Activity4Screenshots/Part1Screenshots/DependencyInjectionSetup.png" width="700"/>
+<img src="Activity4Screenshots/Part1Screenshots/UserControllerDependancyInjection.png" width="700"/>
 
-*The `UserController` class is updated to accept an `IUserManager` instance through constructor injection, allowing for dependency injection of different user manager classes.*
+*The `UserController` class is modified to accept an `IUserManager` instance through constructor injection, enabling dependency injection of different user manager classes.*
 
 ### 2. Setting Up `UserDAO` Injection in `Program.cs`
-<img src="Activity4Screenshots/Part1Screenshots/UserDAOInjection.png" width="700"/>
+<img src="Activity4Screenshots/Part1Screenshots/Program-csDependencyInjection.png" width="700"/>
 
-*The initial setup in `Program.cs` injects `UserDAO` as the implementation of `IUserManager`, using `AddSingleton` to provide a single instance throughout the application.*
+*The initial configuration in `Program.cs` injects `UserDAO` as the implementation of `IUserManager`, using `AddSingleton` to provide a consistent instance across the application.*
 
 ### 3. Testing with SQL-Backed Data Source
-<img src="Activity4Screenshots/Part1Screenshots/SQLLoginSuccess.png" width="700"/>
+<img src="Activity4Screenshots/Part1Screenshots/LoginFailedSqlUsername.png" width="700"/>
+<img src="Activity4Screenshots/Part1Screenshots/AppFunctioningNormallyAfterDI.png" width="700"/>
 
-*The application initially uses `UserDAO`, allowing successful login for users stored in the SQL database.*
+*Initially, the application uses `UserDAO`, allowing login attempts against users stored in the SQL database. The application shows both successful and failed login attempts depending on user credentials.*
 
 ### 4. Switching to `UserCollection` for In-Memory Data
-<img src="Activity4Screenshots/Part1Screenshots/UserCollectionInjection.png" width="700"/>
+<img src="Activity4Screenshots/Part1Screenshots/Program-csUserCollectionDemo.png" width="700"/>
 
-*The dependency injection configuration in `Program.cs` is updated to inject `UserCollection` as the `IUserManager` implementation, switching the data source to a hard-coded collection of users.*
+*The dependency injection configuration in `Program.cs` is updated to inject `UserCollection` as the `IUserManager` implementation, switching the data source to an in-memory collection of users.*
 
 ### 5. Testing with In-Memory Data Source
-<img src="Activity4Screenshots/Part1Screenshots/InMemoryLoginSuccess.png" width="700"/>
+<img src="Activity4Screenshots/Part1Screenshots/UserCollectionLoginSuccessHarry.png" width="700"/>
 
-*With `UserCollection` injected, the application uses hard-coded data (e.g., "Harry" and "Megan"), demonstrating the flexibility of dependency injection by switching the data source without modifying `UserController`.*
-
-### 6. Reverting Back to SQL Data Source
-<img src="Activity4Screenshots/Part1Screenshots/UserDAOReinjection.png" width="700"/>
-
-*The dependency injection is set back to `UserDAO` to use the SQL database once again, showing how easily the data source can be switched through configuration.*
+*With `UserCollection` injected, the application allows login with in-memory data (e.g., the user "Harry"), showcasing dependency injection's flexibility by switching data sources without modifying the `UserController`.*
 
 ---
 
 ## Summary of Key Concepts (Part 1)
-In Part 1 of Activity 4, I implemented dependency injection in the `UserController` class, allowing for flexible selection between different data sources (`UserDAO` for SQL and `UserCollection` for in-memory data). By configuring `Program.cs` to inject `IUserManager` with either `UserDAO` or `UserCollection`, I demonstrated the use of dependency injection to decouple the controller from the specific data implementation. This process enabled easy switching between data sources and provided a practical understanding of dependency injection, enhancing the modularity and testability of the application.
+In Part 1 of Activity 4, I implemented dependency injection in the `UserController` class, allowing for flexible selection between data sources (`UserDAO` for SQL and `UserCollection` for in-memory data). By configuring `Program.cs` to inject `IUserManager` with either `UserDAO` or `UserCollection`, I demonstrated how dependency injection decouples the controller from a specific data implementation. This setup enabled easy data source switching and provided a practical understanding of dependency injection, enhancing the application's modularity and testability. 
 
 ---
 
@@ -115,7 +111,7 @@ In Part 2 of Activity 4, I implemented additional validation rules in the `Appoi
 *The HTML generated by the Razor view is inspected to confirm each button’s structure, attributes, and functionality.*
 
 ### 5. Game Success Message Display
-<img src="/Activity4Screenshots/Part3Screenshots/GameSuccessMessage_Displayed.png" width="700"/>
+<img src="Activity4Screenshots/Part3Screenshots/GameSuccessMessage_Displayed.png" width="700"/>
 
 *Once all buttons in the grid are set to the same color, a success message is displayed to the user, indicating that the game goal has been achieved.*
 
