@@ -1,0 +1,28 @@
+﻿@model IEnumerable<ButtonGrid.Models.ButtonModel>
+<link rel="stylesheet" href="~/css/buttons.css" />
+
+<h2>The time is @DateTime.Now</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+        <div class="success-message">@TempData["SuccessMessage"]</div>
+}
+
+<form asp-action="ButtonClick">
+    <div class="container">
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            var button = Model.ElementAt(i);
+            if (i % 5 == 0)
+            {
+                        <div style="width: 100%;"></div>
+            }
+                <div class="game-button" data-id="@button.Id">
+                    <button type="submit" name="id" value="@button.Id">
+                        <img src="@button.ButtonImage" alt="Button" />
+                        <div>@button.Id, @button.ButtonState</div>
+                    </button>
+                </div>
+        }
+    </div>
+</form>

@@ -1,0 +1,30 @@
+﻿.game-button {
+    width: 75px;
+    text-align: center;
+    margin: 5px;
+}
+
+    .game-button img {
+        width: 70px;
+        height: 70px;
+    }
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+
+.success-message {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+}
