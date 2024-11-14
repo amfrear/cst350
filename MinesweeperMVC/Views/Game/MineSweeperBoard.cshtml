@@ -12,6 +12,12 @@
     }
 }
 
+<div class="mt-3">
+    <form asp-action="RestartGame" asp-controller="Game" method="post">
+        <button type="submit" class="btn btn-primary">Restart Game</button>
+    </form>
+</div>
+
 <div id="board" class="grid-container" style="display: grid; grid-template-columns: repeat(@Model.Size, 30px); grid-gap: 2px;">
     @if (Model?.Grid != null)
     {
