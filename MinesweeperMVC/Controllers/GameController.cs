@@ -30,32 +30,25 @@ namespace MinesweeperMVC.Controllers
         [HttpPost]
         public IActionResult StartGame(string boardSize = "small", string difficulty = "easy")
         {
-            int size = boardSize switch
-            {
-                "small" => 9,
-                "medium" => 16,
-                "large" => 24,
-                _ => 9
-            };
+            // Set up board size and difficulty
+            int size = boardSize switch { "small" => 9, "medium" => 16, "large" => 24, _ => 9 };
+            double difficultyLevel = difficulty switch { "easy" => 0.10, "medium" => 0.15, "hard" => 0.20, _ => 0.15 };
 
-            double difficultyLevel = difficulty switch
-            {
-                "easy" => 0.10,
-                "medium" => 0.15,
-                "hard" => 0.20,
-                _ => 0.15
-            };
-
-            // Store the last used board size and difficulty in the session
+            // Store last settings in session
             HttpContext.Session.SetString("LastBoardSize", boardSize);
             HttpContext.Session.SetString("LastDifficulty", difficulty);
 
+            // Initialize the game board
             var board = new Board(size) { Difficulty = difficultyLevel };
             board.SetupLiveNeighbors();
             board.CalculateLiveNeighbors();
 
+            // Store the board in session
             HttpContext.Session.SetString("CurrentBoard", JsonConvert.SerializeObject(board));
             HttpContext.Session.SetString("GameOver", "false");
+
+            // Start the timer
+            HttpContext.Session.SetString("StartTime", DateTime.UtcNow.ToString());
 
             return RedirectToAction("MineSweeperBoard");
         }
@@ -149,7 +142,38 @@ namespace MinesweeperMVC.Controllers
             if (CheckWinCondition(board))
             {
                 HttpContext.Session.SetString("GameOver", "true");
-                return View("Win", board); // Redirect to Win view if the player wins
+
+                // Retrieve StartTime and compute elapsed time
+                var startTimeStr = HttpContext.Session.GetString("StartTime");
+                DateTime startTime;
+                if (!DateTime.TryParse(startTimeStr, out startTime))
+                {
+                    startTime = DateTime.UtcNow; // Default to now if parsing fails
+                }
+                var elapsedTime = DateTime.UtcNow - startTime;
+
+                // Retrieve board size and difficulty from session
+                var boardSizeStr = HttpContext.Session.GetString("LastBoardSize") ?? "small";
+                var difficultyStr = HttpContext.Session.GetString("LastDifficulty") ?? "easy";
+
+                // Compute score
+                int baseScore = 1000; // Base score
+                double sizeMultiplier = board.Size / 9.0; // Since 9 is the small board
+                double difficultyMultiplier = difficultyStr switch
+                {
+                    "easy" => 1.0,
+                    "medium" => 1.5,
+                    "hard" => 2.0,
+                    _ => 1.0
+                };
+                double timePenalty = elapsedTime.TotalSeconds;
+                int finalScore = (int)(baseScore * sizeMultiplier * difficultyMultiplier / timePenalty);
+
+                // Pass the score and elapsed time to the view
+                ViewData["Score"] = finalScore;
+                ViewData["ElapsedTime"] = elapsedTime.ToString(@"mm\:ss");
+
+                return View("Win", board);
             }
 
             HttpContext.Session.SetString("CurrentBoard", JsonConvert.SerializeObject(board));
