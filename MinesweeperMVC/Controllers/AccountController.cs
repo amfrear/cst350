@@ -79,8 +79,11 @@ namespace MinesweeperMVC.Controllers
                     // Store user status in session
                     HttpContext.Session.SetString("Username", user.Username);
 
-                    // Redirect to a success page
-                    return RedirectToAction("LoginSuccess");
+                    // Set a success message
+                    TempData["SuccessMessage"] = "You have successfully logged in!";
+
+                    // Redirect to the Home page
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -89,26 +92,6 @@ namespace MinesweeperMVC.Controllers
             }
 
             return View();
-        }
-
-        public IActionResult LoginSuccess()
-        {
-            return View();
-        }
-
-        // Helper method to hash passwords
-        private string HashPassword(string password)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                var builder = new StringBuilder();
-                foreach (var b in bytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-                return builder.ToString();
-            }
         }
 
         // GET: Account/StartGame
@@ -131,6 +114,21 @@ namespace MinesweeperMVC.Controllers
         {
             HttpContext.Session.Clear(); // Clear session
             return RedirectToAction("Index", "Home"); // Redirect to the Home page
+        }
+
+        // Helper method to hash passwords
+        private string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                var builder = new StringBuilder();
+                foreach (var b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
+            }
         }
     }
 }
