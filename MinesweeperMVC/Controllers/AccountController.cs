@@ -109,6 +109,46 @@ namespace MinesweeperMVC.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult StartGame(string boardSize, string difficulty)
+        {
+            // Process the board size and difficulty level as needed
+            // For now, you could store these in TempData or pass them to a game setup logic
+
+            // Redirect to the MineSweeperBoard page (we'll create this in the next steps)
+            return RedirectToAction("MineSweeperBoard", new { boardSize, difficulty });
+        }
+
+        // GET: Account/MineSweeperBoard
+        public IActionResult MineSweeperBoard(string boardSize, string difficulty)
+        {
+            // Map boardSize to dimensions
+            int size = boardSize switch
+            {
+                "small" => 9,
+                "medium" => 16,
+                "large" => 24,
+                _ => 9
+            };
+
+            // Map difficulty to mine density
+            double difficultyLevel = difficulty switch
+            {
+                "easy" => 0.10,
+                "medium" => 0.15,
+                "hard" => 0.20,
+                _ => 0.15
+            };
+
+            // Initialize the board with the selected size and difficulty
+            var board = new Board(size) { Difficulty = difficultyLevel };
+            board.SetupLiveNeighbors();
+            board.CalculateLiveNeighbors();
+
+            // Pass the board to the view
+            return View(board);
+        }
+
         // GET: Account/Logout
         public IActionResult Logout()
         {

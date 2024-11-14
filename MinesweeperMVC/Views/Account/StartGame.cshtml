@@ -2,5 +2,28 @@
     ViewData["Title"] = "Start Game";
 }
 
-<h2>Welcome to Minesweeper!</h2>
-<p>This is the restricted game page, accessible only to logged-in users.</p>
+<div class="container mt-5">
+    <h2>Select Your Game Settings</h2>
+
+    <form asp-action="StartGame" method="post">
+        <div class="mb-3">
+            <label for="boardSize" class="form-label">Board Size:</label>
+            <select id="boardSize" name="boardSize" class="form-select">
+                <option value="small">Small (9x9)</option>
+                <option value="medium">Medium (16x16)</option>
+                <option value="large">Large (24x24)</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="difficulty" class="form-label">Difficulty Level:</label>
+            <select id="difficulty" name="difficulty" class="form-select">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Start Game</button>
+    </form>
+</div>
