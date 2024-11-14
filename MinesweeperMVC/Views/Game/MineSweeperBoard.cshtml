@@ -2,50 +2,57 @@
 
 @if (ViewData["GameOver"] != null && (bool)ViewData["GameOver"])
 {
-    if (ViewData["WinMessage"] != null)
+    if (ViewData["Score"] != null && ViewData["ElapsedTime"] != null)
     {
-                <div class="alert alert-success">@ViewData["WinMessage"]</div>
+        @* Render the win message partial view *@
+                <partial name="_WinMessage" />
     }
-    else
+    else if (ViewData["LossMessage"] != null)
     {
-                <div class="alert alert-danger">Game Over! You clicked on a mine.</div>
+        @* Render the loss message partial view *@
+                <partial name="_LossMessage" />
     }
 }
 
-<div class="mt-3">
-    <form asp-action="RestartGame" asp-controller="Game" method="post">
-        <button type="submit" class="btn btn-primary">Restart Game</button>
-    </form>
-</div>
+<div id="game-container">
+    <div class="restart-button">
+        <form asp-action="RestartGame" asp-controller="Game" method="post">
+            <button type="submit" id="restart-button">Restart Game</button>
+        </form>
+    </div>
 
-<div id="board" class="grid-container" style="display: grid; grid-template-columns: repeat(@Model.Size, 30px); grid-gap: 2px;">
-    @if (Model?.Grid != null)
-    {
-        @for (int i = 0; i < Model.Size; i++)
+    <!-- Game board layout with dynamic columns -->
+    <div id="board" class="grid-container" style="display: grid; grid-template-columns: repeat(@Model.Size, 30px);">
+        @if (Model?.Grid != null)
         {
-            for (int j = 0; j < Model.Size; j++)
+            @for (int i = 0; i < Model.Size; i++)
             {
-                var cell = Model.Grid[i][j];
-                            <form method="post" asp-action="RevealCell" asp-controller="Game">
-                                <input type="hidden" name="row" value="@i" />
-                                <input type="hidden" name="col" value="@j" />
-                                            <button type="submit"
-                    class="grid-cell btn @(cell.Visited ? "btn-secondary" : "btn-light")"
-                    style="width: 30px; height: 30px;"
-                    disabled="@(cell.Visited || (ViewData["GameOver"] != null && (bool)ViewData["GameOver"]) ? "disabled" : null)">
-                        @if (cell.Visited)
-                        {
-                        <span>
-                                @(cell.Live ? "💣" : (cell.LiveNeighbors > 0 ? cell.LiveNeighbors.ToString() : ""))
-                        </span>
-                        }
-            </button>
-                            </form>
+                for (int j = 0; j < Model.Size; j++)
+                {
+                    var cell = Model.Grid[i][j];
+                    bool showMine = (ViewData["GameOver"] != null && (bool)ViewData["GameOver"] && cell.Live);
+
+                                <form method="post" asp-action="RevealCell" asp-controller="Game">
+                                    <input type="hidden" name="row" value="@i" />
+                                    <input type="hidden" name="col" value="@j" />
+                                    <button type="submit"
+                                            class="grid-cell btn @(cell.Visited ? "revealed" : "unrevealed") @(cell.Flagged ? "flagged" : "") @(showMine ? "mine" : "")"
+                                            data-neighbors="@cell.LiveNeighbors"
+                                            disabled="@(cell.Visited || (ViewData["GameOver"] != null && (bool)ViewData["GameOver"]) ? "disabled" : null)">
+                            @if (cell.Visited || showMine)
+                            {
+                                                <span>
+                                    @(cell.Live ? "💣" : (cell.LiveNeighbors > 0 ? cell.LiveNeighbors.ToString() : ""))
+                                                </span>
+                            }
+                                    </button>
+                                </form>
+                }
             }
         }
-    }
-    else
-    {
-            <p>Error: Unable to load the game board.</p>
-    }
+        else
+        {
+                <p>Error: Unable to load the game board.</p>
+        }
+    </div>
 </div>

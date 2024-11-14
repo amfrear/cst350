@@ -20,6 +20,9 @@ namespace MinesweeperMVC.Models
         [JsonProperty]
         public int LiveNeighbors { get; set; } = 0;
 
+        [JsonProperty]
+        public bool Flagged { get; set; } = false;
+
         public Cell()
         {
             // Default constructor for serialization

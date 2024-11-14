@@ -128,7 +128,12 @@ namespace MinesweeperMVC.Controllers
             {
                 board.RevealAllBombs();
                 HttpContext.Session.SetString("GameOver", "true");
-                return View("Loss", board); // Redirect to Loss view on game over
+
+                // Set a flag to display the loss message on the MineSweeperBoard view
+                ViewData["GameOver"] = true;
+                ViewData["LossMessage"] = "Game Over! You clicked on a mine.";
+
+                return View("MineSweeperBoard", board);
             }
             else if (cell.LiveNeighbors > 0)
             {
@@ -152,8 +157,7 @@ namespace MinesweeperMVC.Controllers
                 }
                 var elapsedTime = DateTime.UtcNow - startTime;
 
-                // Retrieve board size and difficulty from session
-                var boardSizeStr = HttpContext.Session.GetString("LastBoardSize") ?? "small";
+                // Retrieve difficulty from session
                 var difficultyStr = HttpContext.Session.GetString("LastDifficulty") ?? "easy";
 
                 // Compute score
@@ -169,11 +173,13 @@ namespace MinesweeperMVC.Controllers
                 double timePenalty = elapsedTime.TotalSeconds;
                 int finalScore = (int)(baseScore * sizeMultiplier * difficultyMultiplier / timePenalty);
 
-                // Pass the score and elapsed time to the view
+                // Set ViewData for the win message, including the score and elapsed time
+                ViewData["GameOver"] = true;
                 ViewData["Score"] = finalScore;
-                ViewData["ElapsedTime"] = elapsedTime.ToString(@"mm\:ss");
+                ViewData["ElapsedTime"] = elapsedTime.ToString("mm\\:ss");
 
-                return View("Win", board);
+                // Pass the board back to the MineSweeperBoard view
+                return View("MineSweeperBoard", board);
             }
 
             HttpContext.Session.SetString("CurrentBoard", JsonConvert.SerializeObject(board));
