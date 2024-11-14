@@ -4,17 +4,22 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace MinesweeperMVC.Controllers
 {
     public class AccountController : Controller
     {
         private readonly MinesweeperDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AccountController(MinesweeperDbContext context)
+        public AccountController(MinesweeperDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
+
+        private ISession Session => _httpContextAccessor.HttpContext.Session;
 
         // GET: Account/Register
         [HttpGet]
@@ -77,7 +82,7 @@ namespace MinesweeperMVC.Controllers
                 if (user != null)
                 {
                     // Store user status in session
-                    HttpContext.Session.SetString("Username", user.Username);
+                    Session.SetString("Username", user.Username);
 
                     // Set a success message
                     TempData["SuccessMessage"] = "You have successfully logged in!";
@@ -94,65 +99,10 @@ namespace MinesweeperMVC.Controllers
             return View();
         }
 
-        // GET: Account/StartGame
-        [HttpGet]
-        public IActionResult StartGame()
-        {
-            // Check if user is logged in
-            if (HttpContext.Session.GetString("Username") == null)
-            {
-                // If not logged in, redirect to login page
-                return RedirectToAction("Login");
-            }
-
-            // If logged in, return the StartGame view
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult StartGame(string boardSize, string difficulty)
-        {
-            // Process the board size and difficulty level as needed
-            // For now, you could store these in TempData or pass them to a game setup logic
-
-            // Redirect to the MineSweeperBoard page (we'll create this in the next steps)
-            return RedirectToAction("MineSweeperBoard", new { boardSize, difficulty });
-        }
-
-        // GET: Account/MineSweeperBoard
-        public IActionResult MineSweeperBoard(string boardSize, string difficulty)
-        {
-            // Map boardSize to dimensions
-            int size = boardSize switch
-            {
-                "small" => 9,
-                "medium" => 16,
-                "large" => 24,
-                _ => 9
-            };
-
-            // Map difficulty to mine density
-            double difficultyLevel = difficulty switch
-            {
-                "easy" => 0.10,
-                "medium" => 0.15,
-                "hard" => 0.20,
-                _ => 0.15
-            };
-
-            // Initialize the board with the selected size and difficulty
-            var board = new Board(size) { Difficulty = difficultyLevel };
-            board.SetupLiveNeighbors();
-            board.CalculateLiveNeighbors();
-
-            // Pass the board to the view
-            return View(board);
-        }
-
         // GET: Account/Logout
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear(); // Clear session
+            Session.Clear(); // Clear session
             return RedirectToAction("Index", "Home"); // Redirect to the Home page
         }
 

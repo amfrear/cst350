@@ -23,7 +23,7 @@
         @* Only show the "Start Game" button if the user is logged in *@
         @if (HttpContextAccessor.HttpContext.Session.GetString("Username") != null)
         {
-                <a asp-controller="Account" asp-action="StartGame" class="btn btn-success btn-lg mx-2">Start Game</a>
+                <a asp-controller="Game" asp-action="StartGame" class="btn btn-success btn-lg mx-2">Start Game</a>
         }
     </div>
 </div>

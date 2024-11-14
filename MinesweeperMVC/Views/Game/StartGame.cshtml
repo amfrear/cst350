@@ -5,7 +5,7 @@
 <div class="container mt-5">
     <h2>Select Your Game Settings</h2>
 
-    <form asp-action="StartGame" method="post">
+    <form asp-controller="Game" asp-action="StartGame" method="post">
         <div class="mb-3">
             <label for="boardSize" class="form-label">Board Size:</label>
             <select id="boardSize" name="boardSize" class="form-select">

@@ -9,32 +9,34 @@ namespace MinesweeperMVC
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
-            // Get the connection string
+            // Register DbContext with DI
             string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-            // Check if the connection string is null or empty and throw an exception if not found
             if (string.IsNullOrEmpty(connectionString))
             {
                 throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             }
 
-            // Register MySQL database context
             builder.Services.AddDbContext<MinesweeperDbContext>(options =>
                 options.UseMySQL(connectionString));
 
-            // Add session services
-            builder.Services.AddDistributedMemoryCache();
-            builder.Services.AddSession();
-
-            // Add IHttpContextAccessor
+            // Register HttpContextAccessor for session use
             builder.Services.AddHttpContextAccessor();
+
+            // Add session services with configuration
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+                options.Cookie.HttpOnly = true; // Prevent client-side script access
+                options.Cookie.IsEssential = true; // Make the cookie essential for compliance
+            });
+
+            // Add controllers with views
+            builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Middleware
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -43,12 +45,17 @@ namespace MinesweeperMVC
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRouting();
-            app.UseAuthorization();
 
-            // Add session middleware
+            app.UseRouting();
+
+            // Session middleware
             app.UseSession();
 
+            // Authentication and Authorization
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            // Endpoint Routing
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
