@@ -106,7 +106,7 @@ namespace MinesweeperMVC.Controllers
             }
             catch (JsonException)
             {
-                return RedirectToAction("StartGame"); // Handle deserialization error
+                return RedirectToAction("StartGame");
             }
 
             if (board == null || board.Grid == null)
@@ -114,57 +114,45 @@ namespace MinesweeperMVC.Controllers
                 return RedirectToAction("StartGame");
             }
 
-            // Check if the game is already over
             if (HttpContext.Session.GetString("GameOver") == "true")
             {
-                ViewData["GameOver"] = true;
                 return View("MineSweeperBoard", board);
             }
 
-            // Validate cell coordinates
             if (row < 0 || row >= board.Size || col < 0 || col >= board.Size)
             {
-                return View("MineSweeperBoard", board); // Invalid cell coordinates, just reload the board
+                return View("MineSweeperBoard", board);
             }
 
             var cell = board.Grid[row][col];
 
             if (cell.Visited)
             {
-                // Cell already revealed, no action needed
                 return View("MineSweeperBoard", board);
             }
 
             if (cell.Live)
             {
-                // Game over: reveal all mines and set GameOver flag
                 board.RevealAllBombs();
                 HttpContext.Session.SetString("GameOver", "true");
-                ViewData["GameOver"] = true;
+                return View("Loss", board); // Redirect to Loss view on game over
             }
             else if (cell.LiveNeighbors > 0)
             {
-                // If the cell has neighboring mines, simply reveal it
                 cell.Visited = true;
             }
             else
             {
-                // If the cell has no neighboring mines, perform FloodFill
                 board.FloodFill(row, col);
             }
 
-            // Check for win condition
             if (CheckWinCondition(board))
             {
-                ViewData["WinMessage"] = "Congratulations! You've won the game!";
-                HttpContext.Session.SetString("GameOver", "true"); // End game on win
-                ViewData["GameOver"] = true;
+                HttpContext.Session.SetString("GameOver", "true");
+                return View("Win", board); // Redirect to Win view if the player wins
             }
 
-            // Update session with new board state
             HttpContext.Session.SetString("CurrentBoard", JsonConvert.SerializeObject(board));
-            ViewData["GameOver"] = HttpContext.Session.GetString("GameOver") == "true";
-
             return View("MineSweeperBoard", board);
         }
 

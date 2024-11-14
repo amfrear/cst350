@@ -1,0 +1,12 @@
+﻿@model MinesweeperMVC.Models.Board
+@{
+    ViewData["Title"] = "You Win!";
+}
+
+<div class="container text-center mt-5">
+    <h1>🎉 Congratulations! You've won the game! 🎉</h1>
+    <p>You successfully cleared the board without hitting any mines.</p>
+    <form asp-action="RestartGame" asp-controller="Game" method="post">
+        <button type="submit" class="btn btn-primary">Play Again</button>
+    </form>
+</div>
