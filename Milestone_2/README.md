@@ -8,7 +8,7 @@
 **Instructor:** Brandon Bass  
 
 ## Screencast Video
-**Insert Link Here**
+*Insert Link Here*
 
 ## Application Overview
 
