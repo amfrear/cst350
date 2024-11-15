@@ -30,24 +30,31 @@ namespace MinesweeperMVC.Controllers
         [HttpPost]
         public IActionResult StartGame(string boardSize = "small", string difficulty = "easy")
         {
-            // Set up board size and difficulty
+            // Retrieve the current user's username from session
+            var currentUsername = HttpContext.Session.GetString("Username");
+
+            // Check if the user is logged in
+            if (string.IsNullOrEmpty(currentUsername))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Store the game initiator in session
+            HttpContext.Session.SetString("GameInitiator", currentUsername);
+
+            // (Existing code for setting up the board)
             int size = boardSize switch { "small" => 9, "medium" => 16, "large" => 24, _ => 9 };
             double difficultyLevel = difficulty switch { "easy" => 0.10, "medium" => 0.15, "hard" => 0.20, _ => 0.15 };
 
-            // Store last settings in session
             HttpContext.Session.SetString("LastBoardSize", boardSize);
             HttpContext.Session.SetString("LastDifficulty", difficulty);
 
-            // Initialize the game board
             var board = new Board(size) { Difficulty = difficultyLevel };
             board.SetupLiveNeighbors();
             board.CalculateLiveNeighbors();
 
-            // Store the board in session
             HttpContext.Session.SetString("CurrentBoard", JsonConvert.SerializeObject(board));
             HttpContext.Session.SetString("GameOver", "false");
-
-            // Start the timer
             HttpContext.Session.SetString("StartTime", DateTime.UtcNow.ToString());
 
             return RedirectToAction("MineSweeperBoard");
@@ -55,31 +62,24 @@ namespace MinesweeperMVC.Controllers
 
         public IActionResult MineSweeperBoard()
         {
-            // Deserialize the board from session and pass it to the view
+            // Retrieve the current username and the game initiator from session
+            var currentUsername = HttpContext.Session.GetString("Username");
+            var gameInitiator = HttpContext.Session.GetString("GameInitiator");
+
+            // Check if the current user is the game initiator
+            if (string.IsNullOrEmpty(currentUsername) || currentUsername != gameInitiator)
+            {
+                return RedirectToAction("AccessDenied", "Home");
+            }
+
+            // Load the board from session
             var boardJson = HttpContext.Session.GetString("CurrentBoard");
             if (string.IsNullOrEmpty(boardJson))
             {
                 return RedirectToAction("StartGame");
             }
 
-            Board board;
-            try
-            {
-                board = JsonConvert.DeserializeObject<Board>(boardJson);
-            }
-            catch (JsonException)
-            {
-                // Handle deserialization error
-                return RedirectToAction("StartGame");
-            }
-
-            if (board == null || board.Grid == null)
-            {
-                return RedirectToAction("StartGame");
-            }
-
-            ViewData["GameOver"] = HttpContext.Session.GetString("GameOver") == "true";
-
+            var board = JsonConvert.DeserializeObject<Board>(boardJson);
             return View(board);
         }
 
