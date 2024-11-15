@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<div class="container text-center mt-5">
+    <h1 class="display-4">Welcome to Minesweeper</h1>
+    <p class="lead">Challenge yourself and beat the mines!</p>
+
+    <!-- Display the success message if it exists -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+            <div class="alert alert-success" role="alert">
+            @TempData["SuccessMessage"]
+            </div>
+    }
+
+    <div class="mt-4">
+        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg mx-2">Register</a>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-secondary btn-lg mx-2">Login</a>
+
+        @* Only show the "Start Game" button if the user is logged in *@
+        @if (HttpContextAccessor.HttpContext.Session.GetString("Username") != null)
+        {
+                <a asp-controller="Game" asp-action="StartGame" class="btn btn-success btn-lg mx-2">Start Game</a>
+        }
+    </div>
+</div>
