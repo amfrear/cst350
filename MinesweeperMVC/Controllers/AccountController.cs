@@ -1,25 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using MinesweeperMVC.Models;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace MinesweeperMVC.Controllers
 {
     public class AccountController : Controller
     {
         private readonly MinesweeperDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AccountController(MinesweeperDbContext context, IHttpContextAccessor httpContextAccessor)
+        public AccountController(MinesweeperDbContext context)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
         }
-
-        private ISession Session => _httpContextAccessor.HttpContext.Session;
 
         // GET: Account/Register
         [HttpGet]
@@ -32,27 +27,28 @@ namespace MinesweeperMVC.Controllers
         [HttpPost]
         public IActionResult Register(User model)
         {
+            if (model == null)
+            {
+                ModelState.AddModelError("", "Invalid user data.");
+                return View();
+            }
+
             if (ModelState.IsValid)
             {
-                // Check if Username or Email already exists
                 if (_context.Users.Any(u => u.Username == model.Username || u.Email == model.Email))
                 {
                     ModelState.AddModelError("", "Username or Email already exists.");
                     return View(model);
                 }
 
-                // Hash the password and store in Password field
-                model.Password = HashPassword(model.Password);
-
-                // Save user to the database
+                model.Password = HashPassword(model.Password); // Hash the password
                 _context.Users.Add(model);
                 _context.SaveChanges();
 
                 return RedirectToAction("RegisterSuccess");
             }
 
-            // If we reach here, it means the model was not valid
-            ModelState.AddModelError("", "An unknown error occurred. Please check the details and try again.");
+            ModelState.AddModelError("", "An unknown error occurred. Please try again.");
             return View(model);
         }
 
@@ -70,40 +66,46 @@ namespace MinesweeperMVC.Controllers
 
         // POST: Account/Login
         [HttpPost]
-        public IActionResult Login(string username, string password)
+        public async Task<IActionResult> Login(string username, string password)
         {
-            if (ModelState.IsValid)
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                var hashedPassword = HashPassword(password);
-
-                // Check if the user exists
-                var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == hashedPassword);
-
-                if (user != null)
-                {
-                    // Store user status in session
-                    Session.SetString("Username", user.Username);
-
-                    // Set a success message
-                    TempData["SuccessMessage"] = "You have successfully logged in!";
-
-                    // Redirect to the Home page
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Invalid username or password.");
-                }
+                ModelState.AddModelError("", "Username and password are required.");
+                return View();
             }
 
+            var hashedPassword = HashPassword(password);
+            var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == hashedPassword);
+
+            if (user != null)
+            {
+                // Create user claims
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Username)
+        };
+
+                var identity = new ClaimsIdentity(claims, "CookieAuth");
+                var principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync("CookieAuth", principal);
+
+                // Add a success message
+                TempData["SuccessMessage"] = $"Welcome, {user.Username}!";
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError("", "Invalid username or password.");
             return View();
         }
 
         // GET: Account/Logout
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            Session.Clear(); // Clear session
-            return RedirectToAction("Index", "Home"); // Redirect to the Home page
+            // Use the custom scheme for SignOutAsync
+            await HttpContext.SignOutAsync("CookieAuth");
+            return RedirectToAction("Login");
         }
 
         // Helper method to hash passwords

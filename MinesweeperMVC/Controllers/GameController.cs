@@ -10,21 +10,19 @@ namespace MinesweeperMVC.Controllers
         [HttpGet]
         public IActionResult StartGame(bool isRestart = false)
         {
-            // Redirect to login if the user is not logged in
-            if (HttpContext.Session.GetString("Username") == null)
+            var currentUsername = User.Identity.Name;
+            if (string.IsNullOrEmpty(currentUsername))
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            // If restarting, retrieve last used settings and start the game
             if (isRestart)
             {
-                var boardSize = HttpContext.Session.GetString("LastBoardSize") ?? "small";
-                var difficulty = HttpContext.Session.GetString("LastDifficulty") ?? "easy";
-                return StartGame(boardSize, difficulty); // Call the POST method directly
+                var boardSize = HttpContext.Session.GetString($"LastBoardSize_{currentUsername}") ?? "small";
+                var difficulty = HttpContext.Session.GetString($"LastDifficulty_{currentUsername}") ?? "easy";
+                return StartGame(boardSize, difficulty);
             }
 
-            // Show the game settings view for a new game
             return View();
         }
 
@@ -32,61 +30,39 @@ namespace MinesweeperMVC.Controllers
         [HttpPost]
         public IActionResult StartGame(string boardSize = "small", string difficulty = "easy")
         {
-            // Get the current user's username
-            var currentUsername = HttpContext.Session.GetString("Username");
+            var currentUsername = User.Identity.Name;
 
-            // Redirect to login if the user is not logged in
-            if (string.IsNullOrEmpty(currentUsername))
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            // Store the username as the game initiator
-            HttpContext.Session.SetString("GameInitiator", currentUsername);
-
-            // Determine the board size and difficulty level
+            // Initialize the game board
             int size = boardSize switch { "small" => 9, "medium" => 16, "large" => 24, _ => 9 };
             double difficultyLevel = difficulty switch { "easy" => 0.10, "medium" => 0.15, "hard" => 0.20, _ => 0.15 };
 
-            // Save board size and difficulty in the session for future use
-            HttpContext.Session.SetString("LastBoardSize", boardSize);
-            HttpContext.Session.SetString("LastDifficulty", difficulty);
-
-            // Initialize the game board
             var board = new Board(size) { Difficulty = difficultyLevel };
-            board.SetupLiveNeighbors(); // Place mines randomly
-            board.CalculateLiveNeighbors(); // Calculate adjacent mine counts
+            board.SetupLiveNeighbors();
+            board.CalculateLiveNeighbors();
 
-            // Store the board state and game metadata in the session
-            HttpContext.Session.SetString("CurrentBoard", JsonConvert.SerializeObject(board));
-            HttpContext.Session.SetString("GameOver", "false");
-            HttpContext.Session.SetString("StartTime", DateTime.UtcNow.ToString());
+            // Save board state and metadata to the session
+            HttpContext.Session.SetString($"CurrentBoard_{currentUsername}", JsonConvert.SerializeObject(board));
+            HttpContext.Session.SetString($"LastBoardSize_{currentUsername}", boardSize);
+            HttpContext.Session.SetString($"LastDifficulty_{currentUsername}", difficulty);
 
-            // Redirect to the game board view
+            // Initialize the start time
+            HttpContext.Session.SetString($"StartTime_{currentUsername}", DateTime.UtcNow.ToString());
+
+            HttpContext.Session.SetString($"GameOver_{currentUsername}", "false");
+
             return RedirectToAction("MineSweeperBoard");
         }
 
         // Displays the Minesweeper game board
         public IActionResult MineSweeperBoard()
         {
-            // Get the current username and game initiator from the session
-            var currentUsername = HttpContext.Session.GetString("Username");
-            var gameInitiator = HttpContext.Session.GetString("GameInitiator");
-
-            // Ensure only the game initiator can access the board
-            if (string.IsNullOrEmpty(currentUsername) || currentUsername != gameInitiator)
-            {
-                return RedirectToAction("AccessDenied", "Home");
-            }
-
-            // Load the board state from the session
-            var boardJson = HttpContext.Session.GetString("CurrentBoard");
+            var currentUsername = User.Identity.Name;
+            var boardJson = HttpContext.Session.GetString($"CurrentBoard_{currentUsername}");
             if (string.IsNullOrEmpty(boardJson))
             {
                 return RedirectToAction("StartGame");
             }
 
-            // Deserialize the board and return the view
             var board = JsonConvert.DeserializeObject<Board>(boardJson);
             return View(board);
         }
@@ -95,14 +71,23 @@ namespace MinesweeperMVC.Controllers
         [HttpPost]
         public IActionResult RevealCell(int row, int col)
         {
-            // Load the current board from the session
-            var boardJson = HttpContext.Session.GetString("CurrentBoard");
+            // Get the current user's username from authentication
+            var currentUsername = User.Identity.Name;
+
+            // Redirect to login if the user is not logged in
+            if (string.IsNullOrEmpty(currentUsername))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Retrieve the board state for the current user
+            var boardJson = HttpContext.Session.GetString($"CurrentBoard_{currentUsername}");
             if (string.IsNullOrEmpty(boardJson))
             {
                 return RedirectToAction("StartGame");
             }
 
-            // Deserialize the board from JSON
+            // Deserialize the board from the session
             Board board;
             try
             {
@@ -113,19 +98,19 @@ namespace MinesweeperMVC.Controllers
                 return RedirectToAction("StartGame");
             }
 
-            // Check if the board or its grid is null
+            // Ensure the board and its grid are valid
             if (board == null || board.Grid == null)
             {
                 return RedirectToAction("StartGame");
             }
 
-            // Prevent further actions if the game is over
-            if (HttpContext.Session.GetString("GameOver") == "true")
+            // Prevent further actions if the game is already over
+            if (HttpContext.Session.GetString($"GameOver_{currentUsername}") == "true")
             {
                 return View("MineSweeperBoard", board);
             }
 
-            // Ensure the cell indices are within bounds
+            // Ensure the cell indices are within valid bounds
             if (row < 0 || row >= board.Size || col < 0 || col >= board.Size)
             {
                 return View("MineSweeperBoard", board);
@@ -139,11 +124,11 @@ namespace MinesweeperMVC.Controllers
                 return View("MineSweeperBoard", board);
             }
 
-            // Handle the scenario where the cell contains a mine
+            // Handle the case where the cell contains a mine
             if (cell.Live)
             {
                 board.RevealAllBombs(); // Reveal all mines
-                HttpContext.Session.SetString("GameOver", "true"); // Mark the game as over
+                HttpContext.Session.SetString($"GameOver_{currentUsername}", "true"); // Mark the game as over
                 ViewData["GameOver"] = true;
                 ViewData["LossMessage"] = "Game Over! You clicked on a mine.";
                 return View("MineSweeperBoard", board);
@@ -162,19 +147,24 @@ namespace MinesweeperMVC.Controllers
             // Check if the player has won
             if (CheckWinCondition(board))
             {
-                HttpContext.Session.SetString("GameOver", "true");
+                HttpContext.Session.SetString($"GameOver_{currentUsername}", "true");
 
                 // Calculate the elapsed time
-                var startTimeStr = HttpContext.Session.GetString("StartTime");
+                var startTimeStr = HttpContext.Session.GetString($"StartTime_{currentUsername}");
                 DateTime startTime = DateTime.TryParse(startTimeStr, out startTime) ? startTime : DateTime.UtcNow;
                 var elapsedTime = DateTime.UtcNow - startTime;
 
                 // Get the difficulty from the session
-                var difficultyStr = HttpContext.Session.GetString("LastDifficulty") ?? "easy";
+                var difficultyStr = HttpContext.Session.GetString($"LastDifficulty_{currentUsername}") ?? "easy";
 
                 // Calculate the player's score
+                // Base score
                 int baseScore = 1000;
+
+                // Size multiplier based on the board size
                 double sizeMultiplier = board.Size / 9.0; // Small board is the baseline
+
+                // Difficulty multiplier
                 double difficultyMultiplier = difficultyStr switch
                 {
                     "easy" => 1.0,
@@ -182,8 +172,20 @@ namespace MinesweeperMVC.Controllers
                     "hard" => 2.0,
                     _ => 1.0
                 };
+
+                // Elapsed time penalty
                 double timePenalty = elapsedTime.TotalSeconds;
+                if (timePenalty < 1)
+                {
+                    // Avoid division by zero or extremely small penalty
+                    timePenalty = 1;
+                }
+
+                // Final score calculation
                 int finalScore = (int)(baseScore * sizeMultiplier * difficultyMultiplier / timePenalty);
+
+                // Ensure the score is at least 1
+                finalScore = Math.Max(finalScore, 1);
 
                 // Display the win message and score
                 ViewData["GameOver"] = true;
@@ -194,7 +196,7 @@ namespace MinesweeperMVC.Controllers
             }
 
             // Save the updated board state to the session
-            HttpContext.Session.SetString("CurrentBoard", JsonConvert.SerializeObject(board));
+            HttpContext.Session.SetString($"CurrentBoard_{currentUsername}", JsonConvert.SerializeObject(board));
             return View("MineSweeperBoard", board);
         }
 
@@ -218,7 +220,15 @@ namespace MinesweeperMVC.Controllers
         [HttpPost]
         public IActionResult RestartGame()
         {
+            var currentUsername = User.Identity.Name;
+
+            if (string.IsNullOrEmpty(currentUsername))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             return RedirectToAction("StartGame", new { isRestart = true });
+
         }
     }
 }
