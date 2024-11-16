@@ -31,6 +31,16 @@ namespace MinesweeperMVC
                 options.Cookie.IsEssential = true; // Make the cookie essential for compliance
             });
 
+            // Add authentication with cookie-based authentication
+            builder.Services.AddAuthentication("CookieAuth")
+                .AddCookie("CookieAuth", options =>
+                {
+                    options.Cookie.Name = "MinesweeperAuthCookie";
+                    options.LoginPath = "/Account/Login"; // Redirect to login page
+                    options.AccessDeniedPath = "/Home/AccessDenied"; // Redirect to Access Denied page
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                });
+
             // Add controllers with views
             builder.Services.AddControllersWithViews();
 
@@ -48,11 +58,12 @@ namespace MinesweeperMVC
 
             app.UseRouting();
 
-            // Session middleware
+            // Add Authentication Middleware
+            app.UseAuthentication();
+
+            // Add Session Middleware
             app.UseSession();
 
-            // Authentication and Authorization
-            app.UseAuthentication();
             app.UseAuthorization();
 
             // Endpoint Routing

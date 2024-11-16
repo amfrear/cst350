@@ -1,12 +1,15 @@
 ﻿@model MinesweeperMVC.Models.Board
 
+<!-- Check if the game is over (either win or loss) -->
 @if (ViewData["GameOver"] != null && (bool)ViewData["GameOver"])
 {
+    // If the game is over and the user has won, render the win message
     if (ViewData["Score"] != null && ViewData["ElapsedTime"] != null)
     {
         @* Render the win message partial view *@
                 <partial name="_WinMessage" />
     }
+    // If the game is over and the user has lost, render the loss message
     else if (ViewData["LossMessage"] != null)
     {
         @* Render the loss message partial view *@
@@ -15,32 +18,44 @@
 }
 
 <div id="game-container">
+    <!-- Restart button to allow the player to start a new game -->
     <div class="restart-button">
         <form asp-action="RestartGame" asp-controller="Game" method="post">
             <button type="submit" id="restart-button">Restart Game</button>
         </form>
     </div>
 
-    <!-- Game board layout with dynamic columns -->
-    <div id="board" class="grid-container" style="display: grid; grid-template-columns: repeat(@Model.Size, 30px);">
+    <!-- Game board container styled as a grid -->
+    <div id="board" class="grid-container" 
+         style="display: grid; grid-template-columns: repeat(@Model.Size, 30px);">
         @if (Model?.Grid != null)
         {
+            // Loop through each row of the board
             @for (int i = 0; i < Model.Size; i++)
             {
+                // Loop through each column of the current row
                 for (int j = 0; j < Model.Size; j++)
                 {
+                    // Get the current cell
                     var cell = Model.Grid[i][j];
+
+                    // Determine if a mine should be shown (only revealed if the game is over)
                     bool showMine = (ViewData["GameOver"] != null && (bool)ViewData["GameOver"] && cell.Live);
 
+                    // Render a button for each cell, allowing players to interact with the board
                                 <form method="post" asp-action="RevealCell" asp-controller="Game">
+                                    <!-- Hidden inputs to store the cell's row and column indices -->
                                     <input type="hidden" name="row" value="@i" />
                                     <input type="hidden" name="col" value="@j" />
+
+                                    <!-- Button representing the cell -->
                                     <button type="submit"
                                             class="grid-cell btn @(cell.Visited ? "revealed" : "unrevealed") @(cell.Flagged ? "flagged" : "") @(showMine ? "mine" : "")"
                                             data-neighbors="@cell.LiveNeighbors"
                                             disabled="@(cell.Visited || (ViewData["GameOver"] != null && (bool)ViewData["GameOver"]) ? "disabled" : null)">
                             @if (cell.Visited || showMine)
                             {
+                                                <!-- Display the content of the cell -->
                                                 <span>
                                     @(cell.Live ? "💣" : (cell.LiveNeighbors > 0 ? cell.LiveNeighbors.ToString() : ""))
                                                 </span>
@@ -52,6 +67,7 @@
         }
         else
         {
+                <!-- Display an error message if the game board cannot be loaded -->
                 <p>Error: Unable to load the game board.</p>
         }
     </div>
