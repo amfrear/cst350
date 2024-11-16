@@ -6,92 +6,103 @@ namespace MinesweeperMVC.Controllers
 {
     public class GameController : Controller
     {
+        // Handles the GET request to start or restart a game
         [HttpGet]
         public IActionResult StartGame(bool isRestart = false)
         {
-            // Check if the user is logged in
+            // Redirect to login if the user is not logged in
             if (HttpContext.Session.GetString("Username") == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            // If this is a restart, retrieve settings from the session
+            // If restarting, retrieve last used settings and start the game
             if (isRestart)
             {
                 var boardSize = HttpContext.Session.GetString("LastBoardSize") ?? "small";
                 var difficulty = HttpContext.Session.GetString("LastDifficulty") ?? "easy";
-                return StartGame(boardSize, difficulty); // Call the POST overload directly
+                return StartGame(boardSize, difficulty); // Call the POST method directly
             }
 
-            // Otherwise, show the settings selection view
+            // Show the game settings view for a new game
             return View();
         }
 
+        // Handles the POST request to initialize a new game
         [HttpPost]
         public IActionResult StartGame(string boardSize = "small", string difficulty = "easy")
         {
-            // Retrieve the current user's username from session
+            // Get the current user's username
             var currentUsername = HttpContext.Session.GetString("Username");
 
-            // Check if the user is logged in
+            // Redirect to login if the user is not logged in
             if (string.IsNullOrEmpty(currentUsername))
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            // Store the game initiator in session
+            // Store the username as the game initiator
             HttpContext.Session.SetString("GameInitiator", currentUsername);
 
-            // (Existing code for setting up the board)
+            // Determine the board size and difficulty level
             int size = boardSize switch { "small" => 9, "medium" => 16, "large" => 24, _ => 9 };
             double difficultyLevel = difficulty switch { "easy" => 0.10, "medium" => 0.15, "hard" => 0.20, _ => 0.15 };
 
+            // Save board size and difficulty in the session for future use
             HttpContext.Session.SetString("LastBoardSize", boardSize);
             HttpContext.Session.SetString("LastDifficulty", difficulty);
 
+            // Initialize the game board
             var board = new Board(size) { Difficulty = difficultyLevel };
-            board.SetupLiveNeighbors();
-            board.CalculateLiveNeighbors();
+            board.SetupLiveNeighbors(); // Place mines randomly
+            board.CalculateLiveNeighbors(); // Calculate adjacent mine counts
 
+            // Store the board state and game metadata in the session
             HttpContext.Session.SetString("CurrentBoard", JsonConvert.SerializeObject(board));
             HttpContext.Session.SetString("GameOver", "false");
             HttpContext.Session.SetString("StartTime", DateTime.UtcNow.ToString());
 
+            // Redirect to the game board view
             return RedirectToAction("MineSweeperBoard");
         }
 
+        // Displays the Minesweeper game board
         public IActionResult MineSweeperBoard()
         {
-            // Retrieve the current username and the game initiator from session
+            // Get the current username and game initiator from the session
             var currentUsername = HttpContext.Session.GetString("Username");
             var gameInitiator = HttpContext.Session.GetString("GameInitiator");
 
-            // Check if the current user is the game initiator
+            // Ensure only the game initiator can access the board
             if (string.IsNullOrEmpty(currentUsername) || currentUsername != gameInitiator)
             {
                 return RedirectToAction("AccessDenied", "Home");
             }
 
-            // Load the board from session
+            // Load the board state from the session
             var boardJson = HttpContext.Session.GetString("CurrentBoard");
             if (string.IsNullOrEmpty(boardJson))
             {
                 return RedirectToAction("StartGame");
             }
 
+            // Deserialize the board and return the view
             var board = JsonConvert.DeserializeObject<Board>(boardJson);
             return View(board);
         }
 
+        // Handles revealing a cell on the board
         [HttpPost]
         public IActionResult RevealCell(int row, int col)
         {
+            // Load the current board from the session
             var boardJson = HttpContext.Session.GetString("CurrentBoard");
             if (string.IsNullOrEmpty(boardJson))
             {
                 return RedirectToAction("StartGame");
             }
 
+            // Deserialize the board from JSON
             Board board;
             try
             {
@@ -102,16 +113,19 @@ namespace MinesweeperMVC.Controllers
                 return RedirectToAction("StartGame");
             }
 
+            // Check if the board or its grid is null
             if (board == null || board.Grid == null)
             {
                 return RedirectToAction("StartGame");
             }
 
+            // Prevent further actions if the game is over
             if (HttpContext.Session.GetString("GameOver") == "true")
             {
                 return View("MineSweeperBoard", board);
             }
 
+            // Ensure the cell indices are within bounds
             if (row < 0 || row >= board.Size || col < 0 || col >= board.Size)
             {
                 return View("MineSweeperBoard", board);
@@ -119,50 +133,48 @@ namespace MinesweeperMVC.Controllers
 
             var cell = board.Grid[row][col];
 
+            // If the cell is already visited, do nothing
             if (cell.Visited)
             {
                 return View("MineSweeperBoard", board);
             }
 
+            // Handle the scenario where the cell contains a mine
             if (cell.Live)
             {
-                board.RevealAllBombs();
-                HttpContext.Session.SetString("GameOver", "true");
-
-                // Set a flag to display the loss message on the MineSweeperBoard view
+                board.RevealAllBombs(); // Reveal all mines
+                HttpContext.Session.SetString("GameOver", "true"); // Mark the game as over
                 ViewData["GameOver"] = true;
                 ViewData["LossMessage"] = "Game Over! You clicked on a mine.";
-
                 return View("MineSweeperBoard", board);
             }
             else if (cell.LiveNeighbors > 0)
             {
+                // Mark the cell as visited if it has live neighbors
                 cell.Visited = true;
             }
             else
             {
+                // Perform a flood-fill to reveal connected empty cells
                 board.FloodFill(row, col);
             }
 
+            // Check if the player has won
             if (CheckWinCondition(board))
             {
                 HttpContext.Session.SetString("GameOver", "true");
 
-                // Retrieve StartTime and compute elapsed time
+                // Calculate the elapsed time
                 var startTimeStr = HttpContext.Session.GetString("StartTime");
-                DateTime startTime;
-                if (!DateTime.TryParse(startTimeStr, out startTime))
-                {
-                    startTime = DateTime.UtcNow; // Default to now if parsing fails
-                }
+                DateTime startTime = DateTime.TryParse(startTimeStr, out startTime) ? startTime : DateTime.UtcNow;
                 var elapsedTime = DateTime.UtcNow - startTime;
 
-                // Retrieve difficulty from session
+                // Get the difficulty from the session
                 var difficultyStr = HttpContext.Session.GetString("LastDifficulty") ?? "easy";
 
-                // Compute score
-                int baseScore = 1000; // Base score
-                double sizeMultiplier = board.Size / 9.0; // Since 9 is the small board
+                // Calculate the player's score
+                int baseScore = 1000;
+                double sizeMultiplier = board.Size / 9.0; // Small board is the baseline
                 double difficultyMultiplier = difficultyStr switch
                 {
                     "easy" => 1.0,
@@ -173,36 +185,39 @@ namespace MinesweeperMVC.Controllers
                 double timePenalty = elapsedTime.TotalSeconds;
                 int finalScore = (int)(baseScore * sizeMultiplier * difficultyMultiplier / timePenalty);
 
-                // Set ViewData for the win message, including the score and elapsed time
+                // Display the win message and score
                 ViewData["GameOver"] = true;
                 ViewData["Score"] = finalScore;
                 ViewData["ElapsedTime"] = elapsedTime.ToString("mm\\:ss");
 
-                // Pass the board back to the MineSweeperBoard view
                 return View("MineSweeperBoard", board);
             }
 
+            // Save the updated board state to the session
             HttpContext.Session.SetString("CurrentBoard", JsonConvert.SerializeObject(board));
             return View("MineSweeperBoard", board);
         }
 
+        // Checks if the player has met the win condition
         private bool CheckWinCondition(Board board)
         {
             foreach (var row in board.Grid)
             {
                 foreach (var cell in row)
                 {
+                    // If any non-mine cell is unvisited, the player hasn't won
                     if (!cell.Live && !cell.Visited)
-                        return false; // If any non-mine cell is unvisited, player hasn't won
+                        return false;
                 }
             }
-            return true; // All non-mine cells are revealed, player has won
+            // All non-mine cells are revealed
+            return true;
         }
 
+        // Restarts the game using the last used settings
         [HttpPost]
         public IActionResult RestartGame()
         {
-            // Redirect to StartGame with isRestart flag set to true
             return RedirectToAction("StartGame", new { isRestart = true });
         }
     }
