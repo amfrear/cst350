@@ -30,10 +30,10 @@
          style="display: grid; grid-template-columns: repeat(@Model.Size, 30px);">
         @if (Model?.Grid != null)
         {
-            // Loop through each row of the board
+            // Loop through each row of the game board
             @for (int i = 0; i < Model.Size; i++)
             {
-                // Loop through each column of the current row
+                // Loop through each cell in the current row
                 for (int j = 0; j < Model.Size; j++)
                 {
                     // Get the current cell
@@ -42,7 +42,7 @@
                     // Determine if a mine should be shown (only revealed if the game is over)
                     bool showMine = (ViewData["GameOver"] != null && (bool)ViewData["GameOver"] && cell.Live);
 
-                    // Render a button for each cell, allowing players to interact with the board
+                                <!-- Render a button for each cell, allowing players to interact with the game board -->
                                 <form method="post" asp-action="RevealCell" asp-controller="Game">
                                     <!-- Hidden inputs to store the cell's row and column indices -->
                                     <input type="hidden" name="row" value="@i" />

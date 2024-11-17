@@ -8,7 +8,23 @@
 **Instructor:** Brandon Bass  
 
 ## Screencast Video
-*Insert Link Here*
+<div>
+    <a href="https://www.loom.com/share/03461e6d9a6f43f4ac14bcae0f10d023">
+      <p>CST350 - Milestone 2 Code Review - Watch Video</p>
+    </a>
+    <a href="https://www.loom.com/share/03461e6d9a6f43f4ac14bcae0f10d023">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/03461e6d9a6f43f4ac14bcae0f10d023-0849fa27758099c0-full-play.gif">
+    </a>
+  </div>
+
+<div>
+    <a href="https://www.loom.com/share/efadc06c765b4378b577955964542ca5">
+      <p>CST350 - Milestone 2 Minesweeper App Running - Watch Video</p>
+    </a>
+    <a href="https://www.loom.com/share/efadc06c765b4378b577955964542ca5">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/efadc06c765b4378b577955964542ca5-6e306d2cd75ae36f-full-play.gif">
+    </a>
+  </div>
 
 ## Application Overview
 
