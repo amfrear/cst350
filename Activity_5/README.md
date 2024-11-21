@@ -88,6 +88,11 @@ This activity focuses on building a full-stack CRUD application using the n-laye
 ### 4. Products Displayed with Associated Images
 <img src="Activity5Screenshots/ViewAllProductsWithExistingImages.png" width="700"/>
 
+*The product view displays products along with their associated images.*
+
+### 5. Products Displayed with Associated Images in Grid View
+<img src="Activity5Screenshots/ProductGridWithUniformImages.png" width="700"/>
+
 *The product grid view displays products along with their associated images.*
 
 ---
