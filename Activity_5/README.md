@@ -1,5 +1,5 @@
 
-# CST-350 Activity 5 - Full-Stack CRUD Application with N-Layer Design
+# CST-350 Activity 5 - CRUD with n-Layer Design
 
 ## Cover Sheet
 **Student Name:** Alex Frear  
@@ -25,9 +25,9 @@ This activity focuses on building a full-stack CRUD application using the n-laye
 ### 2. Products Table Schema
 <img src="Activity5Screenshots/ProductsTableSchema.png" width="700"/>
 
-*The table schema shows the structure of the Products table with appropriate data types and constraints.*
+*The table schema defines the structure of the Products table with appropriate data types and constraints.*
 
-### 3. ProductModel Class Code
+### 3. ProductModel Class Implementation
 <img src="Activity5Screenshots/ProductModelClassCode.png" width="700"/>
 
 *The `ProductModel` class represents the data structure for products in the application.*
@@ -41,113 +41,116 @@ This activity focuses on building a full-stack CRUD application using the n-laye
 
 ## Part 2: Implementing Product Creation
 
-### 1. Homepage View
+### 1. Homepage Navigation View
 <img src="Activity5Screenshots/HomePage.png" width="700"/>
 
-*The homepage displays options to navigate to product-related functionalities.*
+*The homepage displays navigation links to access product-related functionalities.*
 
-### 2. Create Product Form (Empty)
+### 2. Empty Create Product Form
 <img src="Activity5Screenshots/CreateProductFormEmpty.png" width="700"/>
 
-*The empty product creation form is presented to the user.*
+*An empty product creation form is presented to the user, ready for input.*
 
-### 3. Filled Create Product Form
+### 3. Create Product Form Filled with Data
 <img src="Activity5Screenshots/CreateProductFormFilled.png" width="700"/>
 
-*The form is filled with product details before submission.*
+*The product creation form is filled with details for a new product before submission.*
 
-### 4. Product Table Updated with New Entry
+### 4. Updated Products Table After Submission
 <img src="Activity5Screenshots/ProductTableWithNewEntry.png" width="700"/>
 
-*After submitting the product creation form, the new product is added to the database and displayed in the product table.*
+*The new product is successfully added to the database and displayed in the product table.*
 
 ### 5. Initial View of All Products Page
 <img src="Activity5Screenshots/InitialViewAllProductsPage.png" width="700"/>
 
-*The "View All Products" page displays the list of all products, including the newly added entry.*
+*The "View All Products" page shows a complete list of all available products, including the newly added item.*
 
 ---
 
-## Part 3: Updating Products with Dynamic Tax Calculation
+## Part 3: Adding Dynamic Tax Calculation
 
-### 1. Dynamic Tax Update in Create Product Form
+### 1. Tax Calculation in Create Product Form
 <img src="Activity5Screenshots/DynamicTaxUpdateCreateProductForm.png" width="700"/>
 
-*The tax value is dynamically updated based on the product price entered in the form.*
+*The tax amount is dynamically calculated based on the entered product price and displayed in real-time.*
 
-### 2. Dynamic Tax Update in View All Products Page
+### 2. Tax Display on All Products Page
 <img src="Activity5Screenshots/DynamicTaxUpdateViewAllProductsPage.png" width="700"/>
 
-*The dynamically calculated tax is displayed alongside product details on the "View All Products" page.*
+*The calculated tax for each product is displayed alongside other product details.*
 
-### 3. Selecting Existing Images for Products
+### 3. Selecting an Image for a Product
 <img src="Activity5Screenshots/CreateProductPageSelectImage.png" width="700"/>
 
-*The product creation form allows users to select existing images from a dropdown menu.*
+*Users can select an existing image from a dropdown while creating a new product.*
 
-### 4. Viewing Products with Existing Images
+### 4. Products Displayed with Associated Images
 <img src="Activity5Screenshots/ViewAllProductsWithExistingImages.png" width="700"/>
 
-*Products with selected images are displayed in the product grid view.*
+*The product grid view displays products along with their associated images.*
 
 ---
 
 ## Part 4: Editing and Deleting Products
 
-### 1. Edit Product Page
+### 1. Edit Product Page with Pre-Filled Data
 <img src="Activity5Screenshots/EditPage.png" width="700"/>
 
-*The edit form is pre-filled with existing product details for easy updates.*
+*The edit product form is pre-populated with existing product data for easy updates.*
 
-### 2. Deleting a Product Confirmation
+### 2. Delete Product Confirmation Dialog
 <img src="Activity5Screenshots/DeleteProductConfirmation.png" width="700"/>
 
-*The user is prompted to confirm the deletion of a product.*
+*The user is prompted to confirm the deletion of a specific product.*
 
-### 3. Product Deleted from All Products Page
+### 3. Product Successfully Deleted from Table
 <img src="Activity5Screenshots/ProductDeletedFromViewAllProductsPage.png" width="700"/>
 
-*The product is successfully deleted and removed from the "View All Products" page.*
+*The deleted product is no longer visible on the "View All Products" page.*
 
-### 4. Confirmation of Product Deletion in Grid View
+### 4. Product Deletion Reflected in Grid View
 <img src="Activity5Screenshots/GridViewAllProductsDeletionConfirmation.png" width="700"/>
 
-*The grid view also reflects the deletion of the product.*
+*The product grid view confirms the successful deletion of the product.*
 
 ---
 
 ## Part 5: Searching for Products
 
-### 1. Search Input Page
+### 1. Product Search Input Page
 <img src="Activity5Screenshots/SearchProductsInputPage.png" width="700"/>
 
-*The search input form allows users to search for products by name or description.*
+*The search input page allows users to search for products by name or description.*
 
-### 2. Search Results Page
+### 2. Search Results Display
 <img src="Activity5Screenshots/SearchProductsResultsPage.png" width="700"/>
 
-*The search results page displays products matching the entered search criteria.*
+*The search results page displays products that match the search criteria entered by the user.*
 
 ---
 
 ## Part 6: Viewing Product Details
 
-### 1. Single Product Details Page
+### 1. Detailed View of a Single Product
 <img src="Activity5Screenshots/SingleProductDetailsPage.png" width="700"/>
 
-*The "Product Details" page provides detailed information about a single product.*
+*The product details page provides in-depth information about a selected product, including its image, price, tax, description, and creation date.*
 
 ---
 
 ## Part 7: Centralized Configuration with appsettings.json
 
-### 1. Centralized Configuration Settings
+### 1. Configuration Settings in appsettings.json
 <img src="Activity5Screenshots/AppSettingsCentralizedConfiguration.png" width="700"/>
 
-*The `appsettings.json` file centralizes configuration settings such as database connection strings and tax rates, enabling dynamic updates without recompiling.*
+*The `appsettings.json` file centralizes important configuration settings such as the database connection string and tax rate, enabling dynamic updates without requiring recompilation.*
 
 ---
 
 ## Summary of Key Concepts
-Through Activity 5, I gained hands-on experience in implementing a full-stack CRUD application using the n-layer design approach. The activity demonstrated the importance of separation of concerns, dependency injection, dynamic configuration, and centralized settings management. This comprehensive project provided valuable insights into building scalable, maintainable, and dynamic web applications.
+Through Activity 5, I gained valuable hands-on experience in building a full-stack CRUD application using the n-layer design approach. This activity reinforced the importance of **separation of concerns**, where the application was divided into distinct layers to ensure modularity and maintainability. I also learned the practical benefits of **dependency injection**, which allowed me to decouple components, promoting both flexibility and testability in the application.
 
+A significant takeaway was the use of **dynamic configuration** through the `appsettings.json` file, which centralized important settings like database connection strings and tax rates. This approach made it easier to update configurations dynamically and adapt to different environments without recompiling the application. The implementation of **CRUD operations**—creating, reading, updating, and deleting data—provided me with a solid understanding of essential functionality in data-driven applications.
+
+Additionally, I focused on **UI enhancements** to improve the user experience. Features like dynamic tax calculation, image selection for products, and detailed product views added a level of polish and usability to the application. Overall, this project highlighted the importance of structured application design, preparing me to develop scalable, maintainable, and user-friendly web applications in the future.
