@@ -160,5 +160,20 @@ namespace MinesweeperMVC.Models
                 }
             }
         }
+
+        public void ToggleFlag(int row, int col)
+        {
+            // Ensure the cell is within bounds
+            if (row >= 0 && col >= 0 && row < Size && col < Size)
+            {
+                var cell = Grid[row][col];
+
+                // Only toggle the flag if the cell has not been visited
+                if (!cell.Visited)
+                {
+                    cell.Flagged = !cell.Flagged; // Toggle the flagged state
+                }
+            }
+        }
     }
 }

@@ -1,7 +1,6 @@
-﻿@* Views/Game/_WinMessage.cshtml *@
-<div class="alert alert-success text-center">
-    <h1>🎉 Congratulations! 🎉</h1>
+﻿<div class="win-message">
+    🎉 <strong>Congratulations!</strong> 🎉
     <p>You successfully cleared all the mines. Well done!</p>
-    <p>Your Score: <strong>@ViewData["Score"]</strong></p>
-    <p>Time Taken: <strong>@ViewData["ElapsedTime"]</strong></p>
+    <p><strong>Your Score:</strong> @ViewData["Score"]</p>
+    <p><strong>Time Taken:</strong> @ViewData["ElapsedTime"]</p>
 </div>

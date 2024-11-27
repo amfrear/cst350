@@ -1,0 +1,28 @@
+﻿<form method="post" asp-action="RevealCell" asp-controller="Game">
+    <input type="hidden" name="row" value="@Model.Row" />
+    <input type="hidden" name="col" value="@Model.Column" />
+
+    <button type="submit"
+            class="grid-cell btn @(Model.Visited ? "revealed" : "unrevealed") @(Model.Flagged ? "flagged" : "") @(Model.Visited && Model.Live ? "mine" : "")"
+            data-flagged="@Model.Flagged"
+            data-row="@Model.Row"
+            data-col="@Model.Column"
+            data-neighbors="@Model.LiveNeighbors"
+    @(Model.Visited ? "disabled" : "")>
+        @if (Model.Flagged)
+        {
+                <span>🚩</span> <!-- Display flag icon if the cell is flagged -->
+        }
+        else if (Model.Visited)
+        {
+            @if (Model.Live)
+            {
+                        <span>💣</span> <!-- Display mine icon if the cell contains a mine -->
+            }
+            else
+            {
+                        <span>@(Model.LiveNeighbors > 0 ? Model.LiveNeighbors.ToString() : "")</span> <!-- Display number of neighboring mines -->
+            }
+        }
+    </button>
+</form>

@@ -1,0 +1,17 @@
+﻿@model MinesweeperMVC.Models.Board
+
+<div id="game-container">
+    <div class="restart-button">
+        <form asp-action="RestartGame" asp-controller="Game" method="post">
+            <button type="submit" id="restart-button">Restart Game</button>
+        </form>
+    </div>
+
+    <!-- Add timestamp display -->
+    <div id="timestamp">
+        Last Update: @ViewData["Timestamp"]
+    </div>
+
+    @* Include the game board *@
+    @Html.Partial("_Board", Model)
+</div>

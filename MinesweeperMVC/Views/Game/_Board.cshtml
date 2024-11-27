@@ -1,0 +1,21 @@
+﻿@model MinesweeperMVC.Models.Board
+
+<div id="board" class="grid-container" 
+     style="display: grid; grid-template-columns: repeat(@Model.Size, 30px);">
+    @if (Model?.Grid != null)
+    {
+        for (int i = 0; i < Model.Size; i++)
+        {
+            for (int j = 0; j < Model.Size; j++)
+            {
+                var cell = Model.Grid[i][j];
+                            <!-- Render the `_Cell.cshtml` partial view -->
+                @Html.Partial("_Cell", cell)
+            }
+        }
+    }
+    else
+    {
+            <p>Error: Unable to load the game board.</p>
+    }
+</div>
