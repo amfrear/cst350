@@ -19,7 +19,7 @@ The modal is dynamically populated with the product’s details for editing afte
 
 *The modal displays the current details of the product being edited.*
 
----
+
 
 ### 2. Edit Button Trigger
 When the "Edit" button is clicked, a debug alert is displayed, and the AJAX request to load the modal is initiated.
@@ -28,7 +28,7 @@ When the "Edit" button is clicked, a debug alert is displayed, and the AJAX requ
 
 *The debug alert shows the product ID associated with the clicked Edit button.*
 
----
+
 
 ### 3. Modal HTML Debug Alert
 A debug alert shows the HTML content loaded into the modal, confirming successful loading of the modal’s form.
@@ -37,7 +37,7 @@ A debug alert shows the HTML content loaded into the modal, confirming successfu
 
 *The debug alert displays the HTML structure of the modal content.*
 
----
+
 
 ### 4. AJAX Form Submission Triggered
 When the "Save" button in the modal is clicked, the form submission is intercepted by JavaScript, and a debug alert confirms AJAX handling.
@@ -46,7 +46,7 @@ When the "Save" button in the modal is clicked, the form submission is intercept
 
 *The debug alert indicates that the form is being submitted via AJAX rather than the default form submission.*
 
----
+
 
 ### 5. Product Update Success
 Once the AJAX request completes, a debug alert confirms the successful update of the product.
@@ -55,7 +55,7 @@ Once the AJAX request completes, a debug alert confirms the successful update of
 
 *The debug alert shows the product ID of the successfully updated product.*
 
----
+
 
 ### 6. Updated Product Card HTML Debug
 The final debug alert shows the HTML of the updated product card, confirming the successful update without a full-page refresh.
@@ -81,7 +81,7 @@ To ensure the `_Button` partial view works independently, the `PartialPageUpdate
 
 *This confirms that the `_Button` partial view renders correctly when tested through the `PartialPageUpdate` method.*
 
----
+
 
 ### 2. Initial Button Grid Display
 The initial button grid is displayed, showing buttons in their starting states with unique IDs and colors.
@@ -90,32 +90,32 @@ The initial button grid is displayed, showing buttons in their starting states w
 
 *The grid displays buttons with IDs ranging from 0 to 24, each initialized with its own state and color.*
 
----
 
-### 3. AJAX Button Click Event Handling
+
+### 3. Button Update After AJAX
+The clicked button updates dynamically after the server returns the rendered partial view, without refreshing the entire page.
+
+<img src="Activity6Screenshots/Part2Screenshots/Button_AJAX_After_Click.png" width="700"/>
+
+*The updated button reflects its new state and color, confirming that the partial view was correctly applied to the button element.*
+
+
+
+### 4. AJAX Button Click Event Handling
 When a button is clicked, a debug alert confirms that the event is being handled by JavaScript via AJAX instead of the default form submission.
 
 <img src="Activity6Screenshots/Part2Screenshots/AJAX_ButtonClick_Alert.png" width="700"/>
 
 *The debug alert shows the ID of the clicked button and confirms the use of AJAX for handling the click event.*
 
----
 
-### 4. HTML Returned by the Server
+
+### 5. HTML Returned by the Server
 After the AJAX request is sent, a debug alert displays the HTML returned by the server for the clicked button. This confirms that the `_Button` partial view is being rendered correctly.
 
 <img src="Activity6Screenshots/Part2Screenshots/AJAX_HTML_Response_Alert.png" width="700"/>
 
 *The debug alert provides the raw HTML returned from the server for the updated button, including its new state and image source.*
-
----
-
-### 5. Button Update After AJAX
-The clicked button updates dynamically after the server returns the rendered partial view, without refreshing the entire page.
-
-<img src="Activity6Screenshots/Part2Screenshots/Button_AJAX_After_Click.png" width="700"/>
-
-*The updated button reflects its new state and color, confirming that the partial view was correctly applied to the button element.*
 
 ---
 
