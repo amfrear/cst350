@@ -1,0 +1,8 @@
+﻿@model ButtonGrid.Models.ButtonModel
+
+<div class="game-button" data-id="@Model.Id">
+    <button type="submit" name="id" value="@Model.Id">
+        <img src="@Model.ButtonImage" alt="Button" />
+        <div>@Model.Id, @Model.ButtonState</div>
+    </button>
+</div>

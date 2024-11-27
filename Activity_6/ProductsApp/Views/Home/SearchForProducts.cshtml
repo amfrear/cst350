@@ -1,0 +1,83 @@
+﻿@model IEnumerable<ProductsApp.Models.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+<h4>Search Results</h4>
+
+<!-- Display the search criteria -->
+@if (ViewBag.SearchCriteria != null)
+{
+        <p>
+            <strong>Search Criteria:</strong><br />
+        @if (!string.IsNullOrWhiteSpace(ViewBag.SearchCriteria.Name))
+        {
+                    <span>Name: @ViewBag.SearchCriteria.Name</span>
+
+            <br />
+        }
+        @if (!string.IsNullOrWhiteSpace(ViewBag.SearchCriteria.Description))
+        {
+                    <span>Description: @ViewBag.SearchCriteria.Description</span>
+
+            <br />
+        }
+        @if (ViewBag.SearchCriteria.Price != null)
+        {
+                    <span>Price: $@ViewBag.SearchCriteria.Price</span>
+
+            <br />
+        }
+        </p>
+}
+
+<!-- Display a "Back to Search" button -->
+<p>
+    <a asp-action="ShowSearchForm" class="btn btn-secondary">Back to Search</a>
+</p>
+
+<!-- Display search results in a table -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.Price)</th>
+            <th>@Html.DisplayNameFor(model => model.Description)</th>
+            <th>@Html.DisplayNameFor(model => model.CreatedAt)</th>
+            <th>Tax</th>
+            <th>@Html.DisplayNameFor(model => model.ImageURL)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+                <tr>
+                    <td colspan="7" class="text-center">No products match the search criteria.</td>
+                </tr>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EstimatedTax)</td>
+                            <td>
+                                <img src="~/images/@item.ImageURL" alt="Product Image" style="width: 100px; height: auto;" 
+                                     onerror="this.src='~/images/Image_not_available.png';" />
+                            </td>
+                            <td>
+                        @Html.ActionLink("Edit", "ShowUpdateProductForm", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                            </td>
+                        </tr>
+            }
+        }
+    </tbody>
+</table>

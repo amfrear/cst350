@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Manage your products effectively with ProductsApp.</p>
+    <div class="mt-4">
+        <a class="btn btn-primary btn-lg" asp-controller="Home" asp-action="ShowCreateProductForm">Create Product</a>
+        <a class="btn btn-secondary btn-lg" asp-controller="Home" asp-action="ShowAllProducts">View All Products</a>
+    </div>
+</div>
