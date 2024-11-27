@@ -93,11 +93,11 @@ The initial button grid is displayed, showing buttons in their starting states w
 
 
 ### 3. Button Update After AJAX
-The clicked button updates dynamically after the server returns the rendered partial view, without refreshing the entire page.
+The clicked button (Button 0) updates dynamically after the server returns the rendered partial view, without refreshing the entire page.
 
 <img src="Activity6Screenshots/Part2Screenshots/Button_AJAX_After_Click.png" width="700"/>
 
-*The updated button reflects its new state and color, confirming that the partial view was correctly applied to the button element.*
+*The updated button (Button 0) reflects its new state and color, confirming that the partial view was correctly applied to the button element.*
 
 
 
