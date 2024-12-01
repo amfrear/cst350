@@ -228,11 +228,13 @@ namespace MinesweeperMVC.Controllers
 
                 // Set ViewData for the win message
                 ViewData["GameOver"] = true;
-                ViewData["Score"] = finalScore;
-                ViewData["ElapsedTime"] = elapsedTime.ToString("mm\\:ss");
+                ViewData["WinMessage"] = "Congratulations! You’ve won the game!";
+                ViewData["Score"] = finalScore; // Pass the score
+                ViewData["ElapsedTime"] = elapsedTime.ToString("mm\\:ss"); // Pass the formatted time
                 ViewData["Timestamp"] = $"AJAX Update: Game Won! All safe cells revealed at {DateTime.UtcNow:HH:mm:ss}";
 
-                _logger.LogInformation($"Game won by user '{currentUsername}'. Final score: {finalScore}, Elapsed time: {elapsedTime.TotalSeconds} seconds.");
+                // Return updated game container with the win message
+                return PartialView("_GameContainer", board);
             }
 
             // Save the updated board state

@@ -1,6 +1,19 @@
 ﻿@model MinesweeperMVC.Models.Board
 
 <div id="game-container">
+    <!-- Display win/loss messages -->
+    @if (ViewData["GameOver"] != null && (bool)ViewData["GameOver"])
+    {
+        if (ViewData["WinMessage"] != null)
+        {
+            @Html.Partial("_WinMessage")
+        }
+        else if (ViewData["LossMessage"] != null)
+        {
+            @Html.Partial("_LossMessage")
+        }
+    }
+    
     <div class="restart-button">
         <form asp-action="RestartGame" asp-controller="Game" method="post">
             <button type="submit" id="restart-button">Restart Game</button>
@@ -12,6 +25,6 @@
         Last Update: @ViewData["Timestamp"]
     </div>
 
-    @* Include the game board *@
+    <!-- Include the game board -->
     @Html.Partial("_Board", Model)
 </div>
