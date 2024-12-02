@@ -2,20 +2,22 @@
 
 <div id="board" class="grid-container" 
      style="display: grid; grid-template-columns: repeat(@Model.Size, 30px);">
-    @if (Model?.Grid != null)
+    @* Use a grid layout with dynamic columns based on the board size *@
+
+    @if (Model?.Grid != null) @* Check if the grid is not null before rendering *@
     {
-        for (int i = 0; i < Model.Size; i++)
+        for (int i = 0; i < Model.Size; i++) @* Iterate over each row in the board *@
         {
-            for (int j = 0; j < Model.Size; j++)
+            for (int j = 0; j < Model.Size; j++) @* Iterate over each column in the row *@
             {
-                var cell = Model.Grid[i][j];
-                            <!-- Render the `_Cell.cshtml` partial view -->
-                @Html.Partial("_Cell", cell)
+                var cell = Model.Grid[i][j]; @* Get the cell at the current row and column *@
+
+                @Html.Partial("_Cell", cell) @* Render the `_Cell.cshtml` partial view for each cell *@
             }
         }
     }
     else
     {
-            <p>Error: Unable to load the game board.</p>
+            <p>Error: Unable to load the game board.</p> @* Display an error message if the grid is null *@
     }
 </div>

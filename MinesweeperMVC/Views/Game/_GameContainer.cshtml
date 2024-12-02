@@ -1,30 +1,31 @@
 ﻿@model MinesweeperMVC.Models.Board
 
 <div id="game-container">
-    <!-- Display win/loss messages -->
-    @if (ViewData["GameOver"] != null && (bool)ViewData["GameOver"])
+    @* Check if the game is over and display the appropriate win or loss message *@
+    @if (ViewData["GameOver"] != null && (bool)ViewData["GameOver"]) @* Check if the game has ended *@
     {
-        if (ViewData["WinMessage"] != null)
+        if (ViewData["WinMessage"] != null) @* If a win message exists, render the win message partial view *@
         {
-            @Html.Partial("_WinMessage")
+            @Html.Partial("_WinMessage") @* Render the _WinMessage partial view *@
         }
-        else if (ViewData["LossMessage"] != null)
+        else if (ViewData["LossMessage"] != null) @* If a loss message exists, render the loss message partial view *@
         {
-            @Html.Partial("_LossMessage")
+            @Html.Partial("_LossMessage") @* Render the _LossMessage partial view *@
         }
     }
-    
+
     <div class="restart-button">
+        @* Display a button to restart the game *@
         <form asp-action="RestartGame" asp-controller="Game" method="post">
             <button type="submit" id="restart-button">Restart Game</button>
         </form>
     </div>
 
-    <!-- Add timestamp display -->
+    @* Display a timestamp for the last update *@
     <div id="timestamp">
-        Last Update: @ViewData["Timestamp"]
+        Last Update: @ViewData["Timestamp"] @* Display the timestamp stored in ViewData *@
     </div>
 
-    <!-- Include the game board -->
-    @Html.Partial("_Board", Model)
+    @* Include the game board *@
+    @Html.Partial("_Board", Model) @* Render the _Board partial view, passing the current Board model *@
 </div>
