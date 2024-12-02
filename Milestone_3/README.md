@@ -8,17 +8,17 @@
 **Instructor:** Brandon Bass  
 
 ## Screencast Videos
-<div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/c2a24c3efce24cd8a9eb7248ac548b91?sid=d5d09436-4fc4-49b3-892c-c3c77f9af333" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+<div>
+    <a href="https://www.loom.com/share/c2a24c3efce24cd8a9eb7248ac548b91?sid=f21b8515-10a4-49ad-9a5b-cba81f1ba3f2">
+      <p>CST350 - Milestone 3 - MinesweeperMVC Code Review - Watch Video</p>
+    </a>
+</div>
 
 <div>
-    <a href="https://www.loom.com/share/4752c9b4eafa455c9046dc546ea962e5">
+    <a href="https://www.loom.com/share/4752c9b4eafa455c9046dc546ea962e5?sid=8ada176b-4c62-4b4d-ac0e-319e202ba627">
       <p>CST350 - Milestone 3 - MinesweeperMVC App Running - Watch Video</p>
     </a>
-    <a href="https://www.loom.com/share/4752c9b4eafa455c9046dc546ea962e5">
-      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/4752c9b4eafa455c9046dc546ea962e5-78cc870e87798cd2-full-play.gif">
-    </a>
-  </div>
-
+</div>
 ## Application Overview
 
 - **Below are screenshots demonstrating the features implemented as part of Milestone 3 - MinesweeperMVC Application.**
@@ -26,56 +26,56 @@
 ---
 
 ### 1. Initial Game Board State
-<img src="Initial_Game_Board_State.png" width="700"/>
+<img src="Milestone3Screenshots/Initial_Game_Board_State.png" width="700"/>
 
 *This screenshot shows the initial game board state, ready for user interaction.*
 
 ---
 
 ### 2. Partial Update - Left Click (AJAX Floodfill)
-<img src="Partial_Update_Left_Click_AJAX_Floodfill.png" width="700"/>
+<img src="Milestone3Screenshots/Partial_Update_Left_Click_AJAX_Floodfill.png" width="700"/>
 
 *This screenshot demonstrates AJAX dynamically updating the board after a left click that triggered a flood-fill operation.*
 
 ---
 
 ### 3. Partial Update - Right Click (AJAX and Flagged Cell)
-<img src="Partial_Update_Right_Click_AJAX_and_Flagged_Cell.png" width="700"/>
+<img src="Milestone3Screenshots/Partial_Update_Right_Click_AJAX_and_Flagged_Cell.png" width="700"/>
 
 *This screenshot shows AJAX dynamically updating the game board after a right-click action to flag a cell.*
 
 ---
 
 ### 4. Partial Update - Left Click (Neighboring Mines)
-<img src="Partial_Update_Left_Click_AJAX_Neighboring_Mines.png" width="700"/>
+<img src="Milestone3Screenshots/Partial_Update_Left_Click_AJAX_Neighboring_Mines.png" width="700"/>
 
 *This screenshot shows the board updated dynamically using AJAX after a left-click action revealed a cell with neighboring mines.*
 
 ---
 
 ### 5. Timestamp Demonstration
-<img src="Timstamp_After_Revealing_Cell.png" width="700"/>
+<img src="Milestone3Screenshots/Timstamp_After_Revealing_Cell.png" width="700"/>
 
 *This screenshot highlights the dynamically updated timestamp after a left-click action, showing that AJAX is being utilized.*
 
 ---
 
 ### 6. Left Click Prevention on Flagged Cell
-<img src="LeftClick_Prevention_On_Flagged_Cell.png" width="700"/>
+<img src="Milestone3Screenshots/LeftClick_Prevention_On_Flagged_Cell.png" width="700"/>
 
 *This screenshot demonstrates that flagged cells do not respond to left-click actions, ensuring proper gameplay logic.*
 
 ---
 
 ### 7. Game Logic - Loss
-<img src="GameLogic_Functioning_Loss.png" width="700"/>
+<img src="Milestone3Screenshots/GameLogic_Functioning_Loss.png" width="700"/>
 
 *This screenshot shows the Loss message displayed when a mine is clicked. The board reveals all mines as part of the loss condition.*
 
 ---
 
 ### 8. Game Logic - Win
-<img src="GameLogic_Functioning_Win.png" width="700"/>
+<img src="Milestone3Screenshots/GameLogic_Functioning_Win.png" width="700"/>
 
 *This screenshot shows the Win message displayed when the player clears all safe cells. The score and time taken are dynamically calculated.*
 
