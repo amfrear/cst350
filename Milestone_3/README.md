@@ -19,6 +19,7 @@
       <p>CST350 - Milestone 3 - MinesweeperMVC App Running - Watch Video</p>
     </a>
 </div>
+
 ## Application Overview
 
 - **Below are screenshots demonstrating the features implemented as part of Milestone 3 - MinesweeperMVC Application.**
