@@ -105,22 +105,27 @@ The left-click functionality updates the button's state by incrementing it and c
 
 #### Initial Button State
 <img src="Activity7Screenshots/7-2Screenshots/LeftClick_InitialButtonState.png" width="700"/>
+
 *The button displays its initial state and image.*
 
 #### Left-Click Event Triggered
 <img src="Activity7Screenshots/7-2Screenshots/LeftClick_EventTriggered.png" width="700"/>
+
 *An alert confirms the left-click event was triggered.*
 
 #### Left-Click Function Executed
 <img src="Activity7Screenshots/7-2Screenshots/LeftClick_DoLeftClickTriggered.png" width="700"/>
+
 *The `doLeftClick` function is executed, sending an AJAX request to the server.*
 
 #### HTML Returned from the Server
 <img src="Activity7Screenshots/7-2Screenshots/LeftClick_HTMLReturned.png" width="700"/>
+
 *An alert displays the updated HTML returned by the server.*
 
 #### Updated Button State
 <img src="Activity7Screenshots/7-2Screenshots/LeftClick_UpdatedButtonState.png" width="700"/>
+
 *The button reflects the new state and updated image after the left-click.*
 
 ---
@@ -130,22 +135,27 @@ The right-click functionality updates the button's state by decrementing it and 
 
 #### Initial Button State
 <img src="Activity7Screenshots/7-2Screenshots/RightClick_InitialButtonState.png" width="700"/>
+
 *The button displays its initial state and image.*
 
 #### Right-Click Event Triggered
 <img src="Activity7Screenshots/7-2Screenshots/RightClick_EventTriggered.png" width="700"/>
+
 *An alert confirms the right-click event was triggered.*
 
 #### Right-Click Function Executed
 <img src="Activity7Screenshots/7-2Screenshots/RightClick_DoRightClickTriggered.png" width="700"/>
+
 *The `doRightClick` function is executed, sending an AJAX request to the server.*
 
 #### HTML Returned from the Server
 <img src="Activity7Screenshots/7-2Screenshots/RightClick_HTMLReturned.png" width="700"/>
+
 *An alert displays the updated HTML returned by the server.*
 
 #### Updated Button State
 <img src="Activity7Screenshots/7-2Screenshots/RightClick_UpdatedButtonState.png" width="700"/>
+
 *The button reflects the new state and updated image after the right-click.*
 
 ---
