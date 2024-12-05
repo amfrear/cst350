@@ -16,9 +16,12 @@
 The `ShowAllProducts` endpoint is tested in the browser to confirm it returns a `200 OK` status with all products.
 
 <img src="Activity7Screenshots/7-1Screenshots/ShowAllProducts_Status200_BrowserEndpoint.png" width="700"/>
+
 *The browser displays all products successfully.*
+<br>
 
  <img src="Activity7Screenshots/7-1Screenshots/Postman_Get_ShowAllProducts_Endpoint.png" width="700"/>
+
 *Postman confirms the endpoint displays all products correctly.* 
 
 
