@@ -1,0 +1,17 @@
+﻿@model ProductsApp.Models.ProductViewModel
+
+<div class="card" data-id="@Model.Id">
+    <img src="~/images/@Model.ImageURL" class="card-img-top img-fluid" alt="@Model.Name"
+         style="height: 200px; object-fit: cover;" onerror="this.src='~/images/Image_not_available.png';">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <p class="card-text">
+            <strong>Price:</strong> $@Model.Price<br>
+            <strong>Tax:</strong> $@Model.EstimatedTax<br>
+            <strong>Description:</strong> @Model.Description
+        </p>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">Details</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+        <button class="btn btn-primary edit-button" data-id="@Model.Id">Edit</button>
+    </div>
+</div>

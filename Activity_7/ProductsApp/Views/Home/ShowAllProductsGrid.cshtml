@@ -1,0 +1,25 @@
+﻿@model IEnumerable<ProductsApp.Models.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Product Grid";
+}
+<a asp-action="ShowSearchForm" class="btn btn-secondary">Search Products</a>
+<div class="container mt-4">
+    <div class="row">
+        @foreach (var product in Model)
+        {
+                <div class="col-md-4 mb-4">
+                @Html.Partial("_ProductCard", product)
+                </div>
+        }
+    </div>
+</div>
+
+<!-- Modal for Editing Products -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Content loaded dynamically -->
+        </div>
+    </div>
+</div>

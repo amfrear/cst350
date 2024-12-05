@@ -1,0 +1,70 @@
+﻿@model ProductsApp.Models.ProductViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title">Edit Product</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <form id="editProductForm" method="post" asp-action="UpdateProduct" asp-controller="Home" enctype="multipart/form-data">
+        <input asp-for="Id" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!-- Name -->
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+            <label asp-for="Price" class="control-label"></label>
+            <input asp-for="Price" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <!-- CreatedAt -->
+        <div class="form-group">
+            <label asp-for="CreatedAt" class="control-label"></label>
+            <input asp-for="CreatedAt" class="form-control" readonly />
+        </div>
+
+        <!-- Tax -->
+        <div class="form-group">
+            <label asp-for="EstimatedTax" class="control-label"></label>
+            <input asp-for="EstimatedTax" class="form-control" readonly />
+        </div>
+
+        <!-- Image Selection -->
+        <div class="form-group">
+            <label asp-for="ImageURL" class="control-label">Select Existing Image</label>
+            <select asp-for="ImageURL" class="form-control">
+                <option value="">-- Select an image --</option>
+                @foreach (var image in ViewBag.Images as List<string>)
+                {
+                        <option value="@image">@image</option>
+                }
+            </select>
+            <span asp-validation-for="ImageURL" class="text-danger"></span>
+        </div>
+
+        <!-- Upload Image -->
+        <div class="form-group">
+            <label>Upload New Image</label>
+            <input type="file" class="form-control" name="UploadedImage" />
+        </div>
+
+        <!-- Modal Footer with Save and Cancel Buttons -->
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </form>
+</div>

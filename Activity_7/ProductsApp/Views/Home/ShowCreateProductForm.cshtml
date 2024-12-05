@@ -1,0 +1,90 @@
+﻿@model ProductsApp.Models.ProductViewModel
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<h4>Create Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="CreateProduct" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Name -->
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <!-- CreatedAt -->
+            <div class="form-group">
+                <label asp-for="CreatedAt" class="control-label"></label>
+                <input asp-for="CreatedAt" class="form-control" readonly />
+            </div>
+
+            <!-- Estimated Tax -->
+            <div class="form-group">
+                <label>Estimated Tax (Formatted)</label>
+                <input id="FormattedEstimatedTax" class="form-control" readonly />
+            </div>
+            <input id="EstimatedTax" asp-for="EstimatedTax" type="hidden" />
+
+            <!-- Image Selection -->
+            <div class="form-group">
+                <label asp-for="ImageURL" class="control-label">Select Existing Image</label>
+                <select asp-for="ImageURL" class="form-control">
+                    <option value="">-- Select an image --</option>
+                    @foreach (var image in ViewBag.Images as List<string>)
+                    {
+                            <option value="@image">@image</option>
+                    }
+                </select>
+                <span asp-validation-for="ImageURL" class="text-danger"></span>
+            </div>
+
+            <!-- Upload Image -->
+            <div class="form-group">
+                <label>Upload New Image</label>
+                <input type="file" class="form-control" name="UploadedImage" />
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script src="~/js/productForm.js"></script>
+    <script>
+        $(document).ready(function () {
+            initializeForm(@ViewBag.TaxRate);
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
