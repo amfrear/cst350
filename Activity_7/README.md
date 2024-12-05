@@ -29,48 +29,65 @@ The `ShowAllProducts` endpoint is tested in the browser to confirm it returns a 
 The `GetProductById` endpoint is tested in the browser and Postman to retrieve a specific product by its ID.
 
 <img src="Activity7Screenshots/7-1Screenshots/GetProductById_Status200_BrowserEndpoint.png" width="700"/>
-*Browser displays a product retrieved successfully.*  
+
+*Browser displays a product retrieved successfully.*
+<br>  
 
 <img src="Activity7Screenshots/7-1Screenshots/Postman_Get_GetProductById_Endpoint.png" width="700"/>
+
 *Postman confirms the endpoint returns the product details correctly.*  
 
 ### 3. Testing `SearchForProducts` Endpoint
 The `SearchForProducts` endpoint is tested in the browser for both successful searches and error handling when parameters are missing.
 
 <img src="Activity7Screenshots/7-1Screenshots/SearchForProducts_Status200_BrowserEndpoint.png" width="700"/>
-*Browser displays search results successfully.*  
+
+*Browser displays search results successfully.*
+<br>  
 
 <img src="Activity7Screenshots/7-1Screenshots/SearchForProducts_NoParamsError400_BrowserEndpoint.png" width="700"/>
-*Browser displays a `400 Bad Request` error when required parameters are missing.*  
+
+*Browser displays a `400 Bad Request` error when required parameters are missing.*
+<br>  
 
 <img src="Activity7Screenshots/7-1Screenshots/Postman_Get_SearchForProducts_Endpoint.png" width="700"/>
-*Postman confirms successful search results.*  
+
+*Postman confirms successful search results.* 
+<br> 
 
 <img src="Activity7Screenshots/7-1Screenshots/Postman_Get_SearchForProducts_NoParamsError_Endpoint.png" width="700"/>
+
 *Postman displays an error message when no parameters are provided.*  
 
 ### 4. Testing `CreateProduct` Endpoint
 A new product is created using Postman, and its successful addition is verified by fetching all products.
 
 <img src="Activity7Screenshots/7-1Screenshots/Postman_CreateProduct_Status201.png" width="700"/>
-*Postman confirms the product was created successfully.*  
+
+*Postman confirms the product was created successfully.*
+<br>  
 
 <img src="Activity7Screenshots/7-1Screenshots/Postman_CreateProductVerified_GetShowAllProducts.png" width="700"/>
+
 *Postman verifies the new product is included in the list of all products.*  
 
 ### 5. Testing `UpdateProduct` Endpoint
 An existing product is updated using Postman, and the changes are verified by fetching the updated product details.
 
 <img src="Activity7Screenshots/7-1Screenshots/Postman_PutUpdateProduct_Status204.png" width="700"/>
-*Postman confirms the product update was successful.*  
+
+*Postman confirms the product update was successful.* 
+<br> 
 
 <img src="Activity7Screenshots/7-1Screenshots/Postman_UpdateProductVerified_GetGetProductById.png" width="700"/>
+
 *Postman verifies the product’s details reflect the update.*  
 
 ### 6. Testing `DeleteProduct` Endpoint
 A product is deleted using Postman, and its removal is confirmed by fetching all products.
 
 <img src="Activity7Screenshots/7-1Screenshots/Postman_DeleteProduct_Status204.png" width="700"/>
+
 *Postman confirms the product was deleted successfully.*  
 
 ---
