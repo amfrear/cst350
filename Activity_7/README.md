@@ -16,8 +16,11 @@
 The `ShowAllProducts` endpoint is tested in the browser to confirm it returns a `200 OK` status with all products.
 
 <img src="Activity7Screenshots/7-1Screenshots/ShowAllProducts_Status200_BrowserEndpoint.png" width="700"/>
+*The browser displays all products successfully.*
 
-*The browser displays all products successfully.*  
+ <img src="Activity7Screenshots/7-1Screenshots/Postman_Get_ShowAllProducts_Endpoint.png" width="700"/>
+*Postman confirms the endpoint displays all products correctly.* 
+
 
 ### 2. Testing `GetProductById` Endpoint
 The `GetProductById` endpoint is tested in the browser and Postman to retrieve a specific product by its ID.
