@@ -1,0 +1,19 @@
+﻿@model MinesweeperMVC.Models.Board
+
+<!-- Check if the game is over (either win or loss) -->
+@if (ViewData["GameOver"] != null && (bool)ViewData["GameOver"])
+{
+    if (ViewData["Score"] != null && ViewData["ElapsedTime"] != null)
+    {
+        @* Render the win message partial view *@
+                <partial name="_WinMessage" />
+    }
+    else if (ViewData["LossMessage"] != null)
+    {
+        @* Render the loss message partial view *@
+                <partial name="_LossMessage" />
+    }
+}
+
+@* Include the game container *@
+@Html.Partial("_GameContainer", Model)

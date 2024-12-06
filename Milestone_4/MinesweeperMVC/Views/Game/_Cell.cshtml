@@ -1,0 +1,26 @@
+﻿<button
+    class="grid-cell btn @(Model.Visited ? "revealed" : "unrevealed") @(Model.Flagged ? "flagged" : "") @(Model.Visited && Model.Live ? "mine" : "")"
+    data-flagged="@Model.Flagged"  @* Indicates whether the cell is flagged (true/false) *@
+    data-row="@Model.Row"          @* Row number of the cell *@
+    data-col="@Model.Column"       @* Column number of the cell *@
+    data-neighbors="@Model.LiveNeighbors" @* Number of neighboring mines for this cell *@
+@(Model.Visited ? "disabled=\"disabled\"" : "")> @* Disables the button if the cell is already visited *@
+
+    @* Display content based on the state of the cell *@
+    @if (Model.Flagged) @* If the cell is flagged *@
+    {
+            <span>🚩</span> @* Show a flag icon for flagged cells *@
+    }
+    else if (Model.Visited) @* If the cell is visited *@
+    {
+        @if (Model.Live) @* If the cell contains a mine *@
+        {
+                    <span>💣</span> @* Show a bomb icon for mine cells *@
+        }
+        else @* If the cell does not contain a mine *@
+        {
+                    <span>@(Model.LiveNeighbors > 0 ? Model.LiveNeighbors.ToString() : "")</span> 
+            @* Show the number of neighboring mines if greater than 0, or leave blank if none *@
+        }
+    }
+</button>

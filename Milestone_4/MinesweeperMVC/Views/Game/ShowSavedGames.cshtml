@@ -1,0 +1,45 @@
+﻿@model IEnumerable<MinesweeperMVC.Models.Game>
+
+<div class="saved-games-container">
+    <h2>Saved Games</h2>
+
+    @if (!Model.Any())
+    {
+            <p>No saved games available.</p>
+    }
+    else
+    {
+            <table class="saved-games-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date Saved</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var game in Model.OrderByDescending(g => g.DateSaved).Select((g, index) => new { Game = g, Index = index + 1 }))
+                {
+                            <tr>
+                                <td>@game.Index</td>
+                                <td>@game.Game.DateSaved.ToString("g")</td>
+                                <td class="game-actions">
+                                    <form asp-action="LoadGame" asp-controller="Game" method="post">
+                                        <input type="hidden" name="gameId" value="@game.Game.Id" />
+                                        <button type="submit" onclick="return confirm('Are you sure you want to load this game?');">
+                                            Load
+                                        </button>
+                                    </form>
+                                    <form asp-action="DeleteGame" asp-controller="Game" method="post">
+                                        <input type="hidden" name="gameId" value="@game.Game.Id" />
+                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this game? This action cannot be undone.');">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                }
+                </tbody>
+            </table>
+    }
+</div>
