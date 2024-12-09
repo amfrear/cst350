@@ -1,0 +1,137 @@
+﻿@model IEnumerable<dynamic>
+@{
+    bool searchPerformed = ViewData["SearchPerformed"] is bool performed && performed;
+    string searchedKeyword = ViewData["SearchedKeyword"]?.ToString() ?? string.Empty;
+    string searchedBook = ViewData["SearchedBook"]?.ToString() ?? "All Books";
+    string searchedChapter = ViewData["SearchedChapter"]?.ToString() ?? "All Chapters";
+    string searchedTestament = ViewData["SearchedTestament"]?.ToString() ?? "All Testaments";
+}
+@section Styles {
+        <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+}
+
+<div class="search-page-container">
+    <!-- Search for Bible Verses -->
+    <div class="search-section">
+        <h1>Search for Bible Verses</h1>
+        <form method="get" asp-action="SearchByKeyword" asp-controller="Search">
+            <label for="testamentDropdown">Testament:</label>
+            <select name="testament" id="testamentDropdown" class="form-select">
+                <option value="All Testaments">All Testaments</option>
+                @foreach (var testament in ViewBag.Testaments)
+                {
+                    if (testament == ViewData["SearchedTestament"]?.ToString())
+                    {
+                                <option value="@testament" selected="selected">@testament</option>
+                    }
+                    else
+                    {
+                                <option value="@testament">@testament</option>
+                    }
+                }
+            </select>
+
+            <label for="bookDropdown">Book:</label>
+            <select name="bookId" id="bookDropdown" class="form-select">
+                <option value="">All Books</option>
+                @foreach (var book in ViewBag.Books)
+                {
+                    if (book.Name == ViewData["SearchedBook"]?.ToString())
+                    {
+                                <option value="@book.Id" selected="selected">@book.Name</option>
+                    }
+                    else
+                    {
+                                <option value="@book.Id">@book.Name</option>
+                    }
+                }
+            </select>
+
+            <label for="chapterDropdown">Chapter:</label>
+            <select name="chapter" id="chapterDropdown" class="form-select">
+                <option value="">All Chapters</option>
+                @for (int i = 1; i <= 150; i++) // Adjust if chapter counts vary by book
+                {
+                    if (i.ToString() == ViewData["SearchedChapter"]?.ToString())
+                    {
+                                <option value="@i" selected="selected">@i</option>
+                    }
+                    else
+                    {
+                                <option value="@i">@i</option>
+                    }
+                }
+            </select>
+
+            <label for="keyword">Keyword:</label>
+            <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Enter keyword..." value="@searchedKeyword" />
+
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    <!-- Reference Search -->
+    <div class="reference-section">
+        <h1>Reference Search</h1>
+        <form method="get" asp-action="ReferenceSearch" asp-controller="Search">
+            <label for="refBookDropdown">Book:</label>
+            <select name="bookId" id="refBookDropdown" class="form-select">
+                <option value="">Select Book</option>
+                @foreach (var book in ViewBag.Books)
+                {
+                        <option value="@book.Id">@book.Name</option>
+                }
+            </select>
+
+            <label for="refChapterDropdown">Chapter:</label>
+            <select name="chapter" id="refChapterDropdown" class="form-select">
+                <option value="">Select Chapter</option>
+                @for (int i = 1; i <= 150; i++) // Adjust if chapter counts vary by book
+                {
+                        <option value="@i">@i</option>
+                }
+            </select>
+
+            <button type="submit" class="btn btn-primary">View Chapter</button>
+        </form>
+    </div>
+</div>
+
+@if (searchPerformed)
+{
+        <div class="search-results">
+            <h2>Your Search</h2>
+            <p>
+                Keyword: <strong>@searchedKeyword</strong><br />
+                Testament: <strong>@searchedTestament</strong><br />
+                Book: <strong>@searchedBook</strong><br />
+                Chapter: <strong>@searchedChapter</strong>
+            </p>
+
+        @if (Model != null && Model.Any())
+        {
+                    <h2>Results</h2>
+                    <div class="results-list">
+                @foreach (var verse in Model)
+                {
+                    string highlightedText = verse.Keyword != null
+                        ? System.Text.RegularExpressions.Regex.Replace(
+                            verse.Text,
+                            System.Text.RegularExpressions.Regex.Escape(verse.Keyword),
+                            "<span class='highlight'>$0</span>",
+                            System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                        : verse.Text;
+
+                                <p>
+                                    <strong>@verse.BookName @verse.Chapter:@verse.VerseNumber</strong> - 
+                        @Html.Raw(highlightedText)
+                                </p>
+                }
+                    </div>
+        }
+        else
+        {
+                    <p>No results found for your search.</p>
+        }
+        </div>
+}

@@ -1,0 +1,37 @@
+﻿@model IEnumerable<dynamic>
+@section Styles {
+        <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+}
+
+
+<h1>Reference Results</h1>
+<h3>@ViewBag.BookName - Chapter @ViewBag.Chapter</h3>
+
+@if (Model.Any())
+{
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Verse</th>
+                    <th>Text</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var verse in Model)
+            {
+                        <tr>
+                            <td>@verse.VerseNumber</td>
+                            <td>@verse.Text</td>
+                            <td>
+                                <a asp-action="VerseDetails" asp-route-id="@verse.Id" class="btn btn-primary">Details</a>
+                            </td>
+                        </tr>
+            }
+            </tbody>
+        </table>
+}
+else
+{
+        <p>No verses found for this chapter.</p>
+}

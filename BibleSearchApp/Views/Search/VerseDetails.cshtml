@@ -1,0 +1,47 @@
+﻿@model BibleSearchApp.Models.VerseDetailsViewModel
+@section Styles {
+        <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+}
+
+<div class="container verse-details">
+    <!-- Verse Details Section -->
+    <div class="verse-box">
+        <p><strong>[ @Model.BookName @Model.Chapter:@Model.VerseNumber ]</strong></p>
+        <p>@Model.Text</p>
+    </div>
+
+    <!-- Notes Section -->
+    <div class="notes-section">
+        <h2>Notes</h2>
+        @if (Model.Notes != null && Model.Notes.Any())
+        {
+                <ul class="notes-list">
+                @foreach (var note in Model.Notes)
+                {
+                            <li>@note.Content</li>
+                }
+                </ul>
+        }
+        else
+        {
+                <p>No notes available for this verse.</p>
+        }
+    </div>
+
+    <!-- Add Note Form -->
+    <div class="add-note">
+        <h3>Add a Note</h3>
+        <form method="post" asp-action="AddNote" asp-controller="Search">
+            <input type="hidden" name="verseId" value="@Model.Id" />
+            <textarea name="content" placeholder="Add your note here..." rows="4" class="form-control" required></textarea>
+            <button type="submit" class="btn btn-primary mt-2">Add Note</button>
+        </form>
+    </div>
+
+    <!-- Back to Chapter Button -->
+    <div class="back-button">
+        <a asp-action="ReferenceSearch" asp-controller="Search" asp-route-bookId="@Model.BookId" asp-route-chapter="@Model.Chapter" class="btn btn-secondary">
+            Back to Chapter
+        </a>
+    </div>
+</div>
