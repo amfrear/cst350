@@ -158,6 +158,42 @@ namespace BibleSearchApp.Controllers
             }
 
             return RedirectToAction("VerseDetails", new { id = verseId });
+        }      
+
+        public IActionResult EditNote(int noteId)
+        {
+            var note = _context.Notes.FirstOrDefault(n => n.Id == noteId);
+            if (note == null)
+            {
+                return NotFound();
+            }
+            return View(note);
+        }
+
+        [HttpPost]
+        public IActionResult EditNote(Note updatedNote)
+        {
+            var note = _context.Notes.FirstOrDefault(n => n.Id == updatedNote.Id);
+            if (note != null)
+            {
+                note.Content = updatedNote.Content;
+                _context.SaveChanges();
+                return RedirectToAction("VerseDetails", new { id = note.VerseId });
+            }
+
+            return NotFound(); // Return a 404 if the note is not found
+        }
+
+        [HttpPost]
+        public IActionResult DeleteNote(int noteId)
+        {
+            var note = _context.Notes.FirstOrDefault(n => n.Id == noteId);
+            if (note != null)
+            {
+                _context.Notes.Remove(note);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("VerseDetails", new { id = note.VerseId });
         }
     }
 }

@@ -13,7 +13,7 @@
 <div class="search-page-container">
     <!-- Search for Bible Verses -->
     <div class="search-section">
-        <h1>Search for Bible Verses</h1>
+        <h1 class="highlight">Search for Bible Verses</h1>
         <form method="get" asp-action="SearchByKeyword" asp-controller="Search">
             <label for="testamentDropdown">Testament:</label>
             <select name="testament" id="testamentDropdown" class="form-select">
@@ -72,7 +72,7 @@
 
     <!-- Reference Search -->
     <div class="reference-section">
-        <h1>Reference Search</h1>
+        <h1 class="highlight">Reference Search</h1>
         <form method="get" asp-action="ReferenceSearch" asp-controller="Search">
             <label for="refBookDropdown">Book:</label>
             <select name="bookId" id="refBookDropdown" class="form-select">
@@ -100,7 +100,7 @@
 @if (searchPerformed)
 {
         <div class="search-results">
-            <h2>Your Search</h2>
+            <h2 class="highlight">Your Search</h2>
             <p>
                 Keyword: <strong>@searchedKeyword</strong><br />
                 Testament: <strong>@searchedTestament</strong><br />
