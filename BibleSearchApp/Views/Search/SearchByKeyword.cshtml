@@ -1,137 +1,202 @@
-﻿@model IEnumerable<dynamic>
+﻿@using X.PagedList.Mvc.Core
+@model BibleSearchApp.ViewModels.SearchViewModel
+
 @{
-    bool searchPerformed = ViewData["SearchPerformed"] is bool performed && performed;
-    string searchedKeyword = ViewData["SearchedKeyword"]?.ToString() ?? string.Empty;
-    string searchedBook = ViewData["SearchedBook"]?.ToString() ?? "All Books";
-    string searchedChapter = ViewData["SearchedChapter"]?.ToString() ?? "All Chapters";
-    string searchedTestament = ViewData["SearchedTestament"]?.ToString() ?? "All Testaments";
+    ViewData["Title"] = "Keyword Search";
 }
+
 @section Styles {
         <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
 }
 
+<!-- Provide JSON data for Keyword Search -->
+<script id="booksData" type="application/json">
+    @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Books))
+</script>
+<script id="chapterCountsData" type="application/json">
+    @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChapterCounts))
+</script>
+
+<!-- Provide JSON data for Reference Search -->
+<script id="refBooksData" type="application/json">
+    @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Books))
+</script>
+<script id="refChapterCountsData" type="application/json">
+    @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChapterCounts))
+</script>
+
 <div class="search-page-container">
-    <!-- Search for Bible Verses -->
+    <!-- Keyword Search -->
     <div class="search-section">
-        <h1 class="highlight">Search for Bible Verses</h1>
-        <form method="get" asp-action="SearchByKeyword" asp-controller="Search">
-            <label for="testamentDropdown">Testament:</label>
-            <select name="testament" id="testamentDropdown" class="form-select">
-                <option value="All Testaments">All Testaments</option>
-                @foreach (var testament in ViewBag.Testaments)
-                {
-                    if (testament == ViewData["SearchedTestament"]?.ToString())
-                    {
-                                <option value="@testament" selected="selected">@testament</option>
-                    }
-                    else
-                    {
-                                <option value="@testament">@testament</option>
-                    }
-                }
-            </select>
-
-            <label for="bookDropdown">Book:</label>
-            <select name="bookId" id="bookDropdown" class="form-select">
-                <option value="">All Books</option>
-                @foreach (var book in ViewBag.Books)
-                {
-                    if (book.Name == ViewData["SearchedBook"]?.ToString())
-                    {
-                                <option value="@book.Id" selected="selected">@book.Name</option>
-                    }
-                    else
-                    {
-                                <option value="@book.Id">@book.Name</option>
-                    }
-                }
-            </select>
-
-            <label for="chapterDropdown">Chapter:</label>
-            <select name="chapter" id="chapterDropdown" class="form-select">
-                <option value="">All Chapters</option>
-                @for (int i = 1; i <= 150; i++) // Adjust if chapter counts vary by book
-                {
-                    if (i.ToString() == ViewData["SearchedChapter"]?.ToString())
-                    {
-                                <option value="@i" selected="selected">@i</option>
-                    }
-                    else
-                    {
-                                <option value="@i">@i</option>
-                    }
-                }
-            </select>
-
-            <label for="keyword">Keyword:</label>
-            <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Enter keyword..." value="@searchedKeyword" />
-
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
+        @Html.Partial("_SearchFormPartial", Model)
     </div>
 
     <!-- Reference Search -->
     <div class="reference-section">
         <h1 class="highlight">Reference Search</h1>
-        <form method="get" asp-action="ReferenceSearch" asp-controller="Search">
-            <label for="refBookDropdown">Book:</label>
-            <select name="bookId" id="refBookDropdown" class="form-select">
-                <option value="">Select Book</option>
-                @foreach (var book in ViewBag.Books)
-                {
-                        <option value="@book.Id">@book.Name</option>
-                }
-            </select>
+        <form id="referenceSearchForm" method="get" asp-action="ReferenceSearch" asp-controller="Search">
+            <!-- Testament Dropdown -->
+            <div class="form-group mb-3">
+                <label for="refTestamentDropdown">Testament:</label>
+                <select name="testament" id="refTestamentDropdown" class="form-select">
+                    @foreach (var testament in Model.Testaments)
+                    {
+                            <option value="@testament">@testament</option>
+                    }
+                </select>
+            </div>
 
-            <label for="refChapterDropdown">Chapter:</label>
-            <select name="chapter" id="refChapterDropdown" class="form-select">
-                <option value="">Select Chapter</option>
-                @for (int i = 1; i <= 150; i++) // Adjust if chapter counts vary by book
-                {
-                        <option value="@i">@i</option>
-                }
-            </select>
+            <!-- Book Dropdown -->
+            <div class="form-group mb-3">
+                <label for="refBookDropdown">Book:</label>
+                <select name="bookId" id="refBookDropdown" class="form-select">
+                    <option value="">Select Book</option>
+                    @foreach (var book in Model.Books)
+                    {
+                            <option value="@book.Id">@book.Name</option>
+                    }
+                </select>
+            </div>
 
+            <!-- Chapter Dropdown -->
+            <div class="form-group mb-3">
+                <label for="refChapterDropdown">Chapter:</label>
+                <select name="chapter" id="refChapterDropdown" class="form-select">
+                    <option value="">Select Chapter</option>
+                    @for (int i = 1; i <= 150; i++)
+                    {
+                            <option value="@i">@i</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Submit Button -->
             <button type="submit" class="btn btn-primary">View Chapter</button>
         </form>
     </div>
 </div>
 
-@if (searchPerformed)
+<!-- Container for AJAX-updated Keyword Search results -->
+<div id="searchResultsContainer">
+    @Html.Partial("_SearchResultsPartial", new BibleSearchApp.ViewModels.PagedSearchResultsViewModel
 {
-        <div class="search-results">
-            <h2 class="highlight">Your Search</h2>
-            <p>
-                Keyword: <strong>@searchedKeyword</strong><br />
-                Testament: <strong>@searchedTestament</strong><br />
-                Book: <strong>@searchedBook</strong><br />
-                Chapter: <strong>@searchedChapter</strong>
-            </p>
+    Results = Model.KeywordResults,
+    Testament = Model.KeywordTestament,
+    BookId = Model.KeywordBookId,
+    Chapter = Model.KeywordChapter,
+    ActionName = "SearchByKeyword",
+    Keyword = Model.Keyword // Pass the Keyword here
+})
+</div>
 
-        @if (Model != null && Model.Any())
-        {
-                    <h2>Results</h2>
-                    <div class="results-list">
-                @foreach (var verse in Model)
-                {
-                    string highlightedText = verse.Keyword != null
-                        ? System.Text.RegularExpressions.Regex.Replace(
-                            verse.Text,
-                            System.Text.RegularExpressions.Regex.Escape(verse.Keyword),
-                            "<span class='highlight'>$0</span>",
-                            System.Text.RegularExpressions.RegexOptions.IgnoreCase)
-                        : verse.Text;
+<!-- Container for AJAX-updated Reference Search results -->
+<div id="referenceSearchResultsContainer">
+    @Html.Partial("_ReferenceSearchResultsPartial", new BibleSearchApp.ViewModels.PagedSearchResultsViewModel
+{
+    Results = Model.ReferenceResults,
+    Testament = Model.ReferenceTestament,
+    BookId = Model.ReferenceBookId,
+    Chapter = Model.ReferenceChapter,
+    ActionName = "ReferenceSearch"
+})
+</div>
 
-                                <p>
-                                    <strong>@verse.BookName @verse.Chapter:@verse.VerseNumber</strong> - 
-                        @Html.Raw(highlightedText)
-                                </p>
-                }
-                    </div>
-        }
-        else
-        {
-                    <p>No results found for your search.</p>
-        }
-        </div>
+@section Scripts {
+        <script src="~/js/dropdownHandler.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Handle Keyword Search form submission via AJAX
+                $('#searchForm').submit(function (e) {
+                    e.preventDefault();
+
+                    var form = $(this);
+                    var url = '/Search/SearchByKeyword';
+                    var data = form.serialize(); // Serialize form data into a query string
+
+                    $.ajax({
+                        type: 'GET', // Use GET to send data in the URL
+                        url: url + '?' + data, // Append serialized data to the URL
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        success: function (partialViewResult) {
+                            $('#searchResultsContainer').html(partialViewResult);
+                            initDropdowns('testamentDropdown', 'bookDropdown', 'chapterDropdown', 'booksData', 'chapterCountsData');
+                        },
+                        error: function () {
+                            alert('An error occurred while processing your keyword search.');
+                        }
+                    });
+                });
+
+                // Delegate click event for pagination links in Keyword Search
+                $('#searchResultsContainer').on('click', '.pagination a', function (e) {
+                    e.preventDefault();
+
+                    var url = $(this).attr('href'); // Use the pagination link's URL directly
+
+                    $.ajax({
+                        type: 'GET', // Use GET to fetch the paginated results
+                        url: url,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        success: function (partialViewResult) {
+                            $('#searchResultsContainer').html(partialViewResult);
+                            initDropdowns('testamentDropdown', 'bookDropdown', 'chapterDropdown', 'booksData', 'chapterCountsData');
+                        },
+                        error: function () {
+                            alert('An error occurred while navigating keyword search pages.');
+                        }
+                    });
+                });
+
+                // Handle Reference Search form submission via AJAX
+                $('#referenceSearchForm').submit(function (e) {
+                    e.preventDefault();
+
+                    var form = $(this);
+                    var url = '/Search/ReferenceSearch';
+                    var data = form.serialize(); // Serialize form data into a query string
+
+                    $.ajax({
+                        type: 'GET', // Use GET to send data in the URL
+                        url: url + '?' + data, // Append serialized data to the URL
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        success: function (partialViewResult) {
+                            $('#referenceSearchResultsContainer').html(partialViewResult);
+                            initDropdowns('refTestamentDropdown', 'refBookDropdown', 'refChapterDropdown', 'refBooksData', 'refChapterCountsData');
+                        },
+                        error: function () {
+                            alert('An error occurred while processing your reference search.');
+                        }
+                    });
+                });
+
+                // Delegate click event for pagination links in Reference Search
+                    $('#referenceSearchResultsContainer').on('click', '.pagination a', function (e) {
+        e.preventDefault();
+
+        var pageUrl = $(this).attr('href');
+        var url = '/Search/ReferenceSearch';
+        var queryParams = new URLSearchParams(pageUrl.split('?')[1]);
+
+        var data = {
+            testament: queryParams.get('testament') !== "All Testaments" ? queryParams.get('testament') : null,
+            bookId: queryParams.get('bookId') || null,
+            chapter: queryParams.get('chapter') || null,
+            page: queryParams.get('page')
+        };
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: data,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            success: function (partialViewResult) {
+                $('#referenceSearchResultsContainer').html(partialViewResult);
+            },
+            error: function () {
+                alert('An error occurred while navigating reference search pages.');
+            }
+        });
+    });
+            });
+        </script>
 }

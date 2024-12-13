@@ -1,0 +1,36 @@
+﻿@using X.PagedList.Mvc.Core
+@model BibleSearchApp.ViewModels.PagedSearchResultsViewModel
+
+@if (Model.Results != null && Model.Results.Any())
+{
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="table-primary">
+                <tr>
+                    <th style="width: 10%;">Verse</th>
+                    <th style="width: 70%;">Text</th>
+                    <th style="width: 20%;" class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var verse in Model.Results)
+            {
+                        <tr>
+                            <td class="text-center">@verse.VerseNumber</td>
+                            <td>@verse.Text</td>
+                            <td class="text-center">
+                                <a asp-action="VerseDetails" asp-route-id="@verse.Id" class="btn btn-sm btn-info">
+                                    View Details
+                                </a>
+                            </td>
+                        </tr>
+            }
+            </tbody>
+        </table>
+
+        <!-- Pagination Controls -->
+    @Html.PagedListPager(Model.Results, page => Url.Action(Model.ActionName, new { testament = Model.Testament, bookId = Model.BookId, chapter = Model.Chapter, page }))
+}
+else
+{
+        <p class="text-muted">No verses found for the selected reference.</p>
+}

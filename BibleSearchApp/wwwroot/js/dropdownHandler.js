@@ -1,35 +1,37 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
-    const testamentDropdown = document.getElementById('testamentDropdown'); // Testament dropdown element
-    const bookDropdown = document.getElementById('bookDropdown'); // Book dropdown element
-    const chapterDropdown = document.getElementById('chapterDropdown'); // Chapter dropdown element
+﻿// wwwroot/js/dropdownHandler.js
 
-    // Parse books data passed from the server
-    const booksData = JSON.parse(document.getElementById('booksData').textContent);
+function initDropdowns(testamentDropdownId, bookDropdownId, chapterDropdownId, booksDataId, chapterCountsDataId) {
+    const testamentDropdown = document.getElementById(testamentDropdownId);
+    const bookDropdown = document.getElementById(bookDropdownId);
+    const chapterDropdown = document.getElementById(chapterDropdownId);
+    const booksDataElement = document.getElementById(booksDataId);
+    const chapterCountsDataElement = document.getElementById(chapterCountsDataId);
 
-    // Parse chapter counts data passed from the server
-    const chapterCounts = JSON.parse(document.getElementById('chapterCountsData').textContent);
+    if (!testamentDropdown || !bookDropdown || !chapterDropdown || !booksDataElement || !chapterCountsDataElement) {
+        return;
+    }
 
-    // Function to filter books based on testament
+    const booksData = JSON.parse(booksDataElement.textContent);
+    const chapterCounts = JSON.parse(chapterCountsDataElement.textContent);
+
     function filterBooks(testament) {
-        const filteredBooks = booksData.filter(book => testament === "All Testaments" || book.Testament === testament);
-        bookDropdown.innerHTML = '<option value="">All Books</option>'; // Reset dropdown
+        const filteredBooks = testament === "All Testaments"
+            ? booksData
+            : booksData.filter(book => book.Testament === testament);
+        bookDropdown.innerHTML = '<option value="">All Books</option>';
 
-        // Populate book dropdown with filtered books
         filteredBooks.forEach(book => {
             const option = document.createElement('option');
             option.value = book.Id;
             option.textContent = book.Name;
-            option.setAttribute('data-testament', book.Testament);
             bookDropdown.appendChild(option);
         });
     }
 
-    // Function to update chapter dropdown
     function updateChapters(bookId) {
-        const chapterCount = chapterCounts[bookId] || 150; // Default to 150 if no book selected
-        chapterDropdown.innerHTML = '<option value="">All Chapters</option>'; // Reset chapters
+        const chapterCount = bookId ? (chapterCounts[bookId] || 150) : 150;
+        chapterDropdown.innerHTML = '<option value="">All Chapters</option>';
 
-        // Populate chapter dropdown with the correct number of chapters
         for (let i = 1; i <= chapterCount; i++) {
             const option = document.createElement('option');
             option.value = i;
@@ -38,15 +40,40 @@
         }
     }
 
-    // Listen for changes in the testament dropdown
+    // Initial population
+    filterBooks(testamentDropdown.value);
+    updateChapters(bookDropdown.value);
+
+    // Event listeners
     testamentDropdown.addEventListener('change', function () {
-        const selectedTestament = this.value; // Get the selected testament
+        const selectedTestament = this.value;
         filterBooks(selectedTestament);
+        updateChapters(null);
     });
 
-    // Listen for changes in the book dropdown
     bookDropdown.addEventListener('change', function () {
-        const selectedBookId = this.value; // Get the selected book ID
+        const selectedBookId = this.value;
         updateChapters(selectedBookId);
     });
+}
+
+// Initialize both Keyword Search and Reference Search dropdowns
+document.addEventListener('DOMContentLoaded', function () {
+    // Initialize Keyword Search dropdowns
+    initDropdowns(
+        'testamentDropdown',
+        'bookDropdown',
+        'chapterDropdown',
+        'booksData',
+        'chapterCountsData'
+    );
+
+    // Initialize Reference Search dropdowns
+    initDropdowns(
+        'refTestamentDropdown',
+        'refBookDropdown',
+        'refChapterDropdown',
+        'refBooksData',
+        'refChapterCountsData'
+    );
 });

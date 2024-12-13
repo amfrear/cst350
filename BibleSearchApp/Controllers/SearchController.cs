@@ -1,8 +1,12 @@
 ﻿using BibleSearchApp.Data;
 using BibleSearchApp.Models;
+using BibleSearchApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using X.PagedList.Extensions;
+using System.Collections.Generic;
+using X.PagedList;
 
 namespace BibleSearchApp.Controllers
 {
@@ -15,14 +19,27 @@ namespace BibleSearchApp.Controllers
             _context = context;
         }
 
-        public IActionResult SearchByKeyword(string keyword, int? bookId, int? chapter, string testament)
+        // ----- Keyword Search Action -----
+        public IActionResult SearchByKeyword(string keyword, int? bookId, int? chapter, string testament, int? page)
         {
-            // Populate books for dropdown filters
-            var books = _context.Books.ToList();
-            ViewBag.Books = books;
+            // Initialize ViewModel
+            var viewModel = new SearchViewModel
+            {
+                Keyword = keyword,
+                KeywordBookId = bookId,
+                KeywordChapter = chapter,
+                KeywordTestament = testament,
+                KeywordPage = page
+            };
 
-            // Calculate chapter counts for each book
-            var chapterCounts = books.ToDictionary(
+            // Populate Testaments Dropdown
+            viewModel.Testaments = new List<string> { "All Testaments", "Old", "New" };
+
+            // Retrieve Books and Chapter Counts
+            var books = _context.Books.ToList();
+            viewModel.Books = books;
+
+            viewModel.ChapterCounts = books.ToDictionary(
                 b => b.Id,
                 b => _context.Verses
                     .Where(v => v.BookId == b.Id)
@@ -30,84 +47,134 @@ namespace BibleSearchApp.Controllers
                     .Distinct()
                     .Count()
             );
-            ViewBag.ChapterCounts = chapterCounts;
 
-            // Populate testament dropdown
-            ViewBag.Testaments = new List<string> { "All Testaments", "Old", "New" };
-
-            // Check if a search was performed
-            ViewData["SearchPerformed"] = !string.IsNullOrEmpty(keyword) || bookId.HasValue || chapter.HasValue || !string.IsNullOrEmpty(testament);
-            ViewData["SearchedKeyword"] = keyword;
-            ViewData["SearchedBook"] = bookId.HasValue ? books.FirstOrDefault(b => b.Id == bookId)?.Name : null;
-            ViewData["SearchedChapter"] = chapter?.ToString();
-            ViewData["SearchedTestament"] = testament;
-
-            // Perform the search query
-            var query = _context.Verses.Include(v => v.Book).AsQueryable();
+            // Perform the Keyword search query
+            var keywordQuery = _context.Verses.Include(v => v.Book).AsQueryable();
 
             if (!string.IsNullOrEmpty(keyword))
             {
-                query = query.Where(v => v.Text.Contains(keyword));
+                keywordQuery = keywordQuery.Where(v => v.Text.Contains(keyword));
             }
 
             if (bookId.HasValue)
             {
-                query = query.Where(v => v.BookId == bookId);
+                keywordQuery = keywordQuery.Where(v => v.BookId == bookId);
             }
 
             if (chapter.HasValue)
             {
-                query = query.Where(v => v.Chapter == chapter);
+                keywordQuery = keywordQuery.Where(v => v.Chapter == chapter);
             }
 
             if (!string.IsNullOrEmpty(testament) && testament != "All Testaments")
             {
+                keywordQuery = keywordQuery.Where(v => v.Book.Testament == testament);
+            }
+
+            var keywordResults = keywordQuery.Select(v => new VerseResult
+            {
+                Id = v.Id,
+                Text = v.Text,
+                Chapter = v.Chapter,
+                VerseNumber = v.VerseNumber,
+                BookName = v.Book.Name,
+                Keyword = keyword
+            });
+
+            // Pagination logic for Keyword Search
+            int pageSize = 5; // Number of results per page
+            int pageNumber = page ?? 1; // Current page number
+            var pagedKeywordResults = keywordResults.ToPagedList(pageNumber, pageSize);
+
+            // Initialize ReferenceResults as empty
+            viewModel.ReferenceResults = new StaticPagedList<VerseResult>(new List<VerseResult>(), 1, pageSize, 0);
+
+            // Check if the request is AJAX
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                var partialViewModel = new PagedSearchResultsViewModel
+                {
+                    Results = pagedKeywordResults,
+                    Testament = testament,
+                    BookId = bookId,
+                    Chapter = chapter,
+                    ActionName = "SearchByKeyword",
+                    Keyword = keyword // Include the keyword here
+                };
+                return PartialView("_SearchResultsPartial", partialViewModel);
+            }
+
+            return View(viewModel);
+        }
+
+        public IActionResult ReferenceSearch(string testament, int? bookId, int? chapter, int? page)
+        {
+            // Treat "All Testaments" as no filter
+            if (string.IsNullOrEmpty(testament) || testament == "All Testaments")
+            {
+                testament = null;
+            }
+
+            // Prepare the query
+            var query = _context.Verses.Include(v => v.Book).AsQueryable();
+
+            // Apply filters if they are provided
+            if (!string.IsNullOrEmpty(testament))
+            {
                 query = query.Where(v => v.Book.Testament == testament);
             }
 
-            var results = query.Select(v => new
+            if (bookId.HasValue && bookId.Value > 0) // Ensure bookId is valid
             {
-                v.Id,
-                v.Text,
-                v.Chapter,
-                v.VerseNumber,
-                BookName = v.Book.Name,
-                Keyword = keyword
-            }).ToList();
-
-            return View(results);
-        }
-
-        public IActionResult ReferenceSearch(int? bookId, int? chapter)
-        {
-            if (!bookId.HasValue || !chapter.HasValue)
-            {
-                return RedirectToAction("SearchByKeyword"); // Redirect to search page if parameters are missing
+                query = query.Where(v => v.BookId == bookId.Value);
             }
 
-            var book = _context.Books.FirstOrDefault(b => b.Id == bookId);
-            if (book == null)
+            if (chapter.HasValue && chapter.Value > 0) // Ensure chapter is valid
             {
-                return RedirectToAction("SearchByKeyword"); // Redirect if the book is invalid
+                query = query.Where(v => v.Chapter == chapter.Value);
             }
 
-            var verses = _context.Verses
-                .Where(v => v.BookId == bookId && v.Chapter == chapter)
-                .OrderBy(v => v.VerseNumber)
-                .Select(v => new
+            // Select the necessary data
+            var results = query.Select(v => new VerseResult
+            {
+                Id = v.Id,
+                Text = v.Text,
+                Chapter = v.Chapter,
+                VerseNumber = v.VerseNumber,
+                BookName = v.Book.Name
+            });
+
+            // Pagination logic
+            int pageSize = 5;
+            int pageNumber = page ?? 1;
+            var pagedReferenceResults = results.ToPagedList(pageNumber, pageSize);
+
+            // Check if the request is AJAX
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                var pagedViewModel = new PagedSearchResultsViewModel
                 {
-                    v.Id,
-                    v.Text,
-                    v.VerseNumber,
-                    BookName = book.Name,
-                    Chapter = v.Chapter
-                })
-                .ToList();
+                    Results = pagedReferenceResults,
+                    Testament = testament ?? "All Testaments",
+                    BookId = bookId ?? 0,
+                    Chapter = chapter ?? 0,
+                    ActionName = "ReferenceSearch"
+                };
 
-            ViewBag.BookName = book.Name;
-            ViewBag.Chapter = chapter;
+                return PartialView("_SearchResultsPartial", pagedViewModel);
+            }
 
-            return View(verses);
+            // Full View
+            var fullViewModel = new PagedSearchResultsViewModel
+            {
+                Results = pagedReferenceResults,
+                Testament = testament ?? "All Testaments",
+                BookId = bookId ?? 0,
+                Chapter = chapter ?? 0,
+                ActionName = "ReferenceSearch"
+            };
+
+            return View("ReferenceSearch", fullViewModel);
         }
 
         public IActionResult VerseDetails(int id)
@@ -141,59 +208,81 @@ namespace BibleSearchApp.Controllers
             return View(viewModel);
         }
 
-        // Add a method to handle adding a new note
         [HttpPost]
-        public IActionResult AddNote(int verseId, string content)
+        public IActionResult AddNoteAjax([FromBody] AddNoteRequest request)
         {
-            if (!string.IsNullOrWhiteSpace(content))
+            if (!string.IsNullOrWhiteSpace(request.Content))
             {
                 var note = new Note
                 {
-                    VerseId = verseId,
-                    Content = content
+                    VerseId = request.VerseId,
+                    Content = request.Content
                 };
 
                 _context.Notes.Add(note);
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("VerseDetails", new { id = verseId });
-        }      
-
-        public IActionResult EditNote(int noteId)
-        {
-            var note = _context.Notes.FirstOrDefault(n => n.Id == noteId);
-            if (note == null)
-            {
-                return NotFound();
-            }
-            return View(note);
+            var notes = GetNotesForVerse(request.VerseId); // a method to retrieve updated notes
+            return PartialView("_NotesTablePartial", notes);
         }
 
         [HttpPost]
-        public IActionResult EditNote(Note updatedNote)
+        public IActionResult DeleteNoteAjax([FromBody] DeleteNoteRequest request)
         {
-            var note = _context.Notes.FirstOrDefault(n => n.Id == updatedNote.Id);
-            if (note != null)
-            {
-                note.Content = updatedNote.Content;
-                _context.SaveChanges();
-                return RedirectToAction("VerseDetails", new { id = note.VerseId });
-            }
-
-            return NotFound(); // Return a 404 if the note is not found
-        }
-
-        [HttpPost]
-        public IActionResult DeleteNote(int noteId)
-        {
-            var note = _context.Notes.FirstOrDefault(n => n.Id == noteId);
+            var note = _context.Notes.FirstOrDefault(n => n.Id == request.NoteId);
             if (note != null)
             {
                 _context.Notes.Remove(note);
                 _context.SaveChanges();
+                var notes = GetNotesForVerse(note.VerseId);
+                return PartialView("_NotesTablePartial", notes);
             }
-            return RedirectToAction("VerseDetails", new { id = note.VerseId });
+
+            return NotFound();
+        }
+
+        private IEnumerable<NoteViewModel> GetNotesForVerse(int verseId)
+        {
+            return _context.Notes
+                .Where(n => n.VerseId == verseId)
+                .Select(n => new NoteViewModel { Id = n.Id, Content = n.Content })
+                .ToList();
+        }
+
+        public class AddNoteRequest
+        {
+            public int VerseId { get; set; }
+            public string Content { get; set; }
+        }
+
+        public class DeleteNoteRequest
+        {
+            public int NoteId { get; set; }
+        }
+
+        [HttpPost]
+        public IActionResult EditNoteAjax([FromBody] EditNoteRequest request)
+        {
+            var note = _context.Notes.FirstOrDefault(n => n.Id == request.NoteId);
+            if (note != null)
+            {
+                note.Content = request.Content;
+                _context.SaveChanges();
+
+                // Retrieve the updated list of notes for the verse
+                var notes = GetNotesForVerse(note.VerseId);
+                // Return the partial view with updated notes
+                return PartialView("_NotesTablePartial", notes);
+            }
+
+            return NotFound();
+        }
+
+        public class EditNoteRequest
+        {
+            public int NoteId { get; set; }
+            public string Content { get; set; }
         }
     }
 }

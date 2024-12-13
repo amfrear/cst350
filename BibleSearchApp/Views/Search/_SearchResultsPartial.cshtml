@@ -1,0 +1,98 @@
+﻿@using X.PagedList.Mvc.Core
+@model BibleSearchApp.ViewModels.PagedSearchResultsViewModel
+
+@functions {
+    public string HighlightKeyword(string text, string keyword)
+    {
+        if (string.IsNullOrEmpty(keyword))
+            return System.Net.WebUtility.HtmlEncode(text); // Encode to prevent XSS
+
+        // Escape special characters in the keyword to prevent regex errors
+        string escapedKeyword = System.Text.RegularExpressions.Regex.Escape(keyword);
+
+        // Define the regex pattern for whole word, case-insensitive search
+        string pattern = $@"\b({escapedKeyword})\b";
+        string replacement = "<span class=\"highlight\">$1</span>";
+
+        // Perform the replacement with case-insensitive option
+        string highlightedText = System.Text.RegularExpressions.Regex.Replace(
+            System.Net.WebUtility.HtmlEncode(text), // Encode the original text
+            pattern,
+            replacement,
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase
+        );
+
+        return highlightedText;
+    }
+}
+
+@if (Model.Results != null && Model.Results.Any())
+{
+    // Declare variables directly within the code block
+    var firstItem = (Model.Results.PageNumber - 1) * Model.Results.PageSize + 1;
+    var lastItem = Model.Results.PageNumber * Model.Results.PageSize;
+
+    if (lastItem > Model.Results.TotalItemCount)
+    {
+        lastItem = Model.Results.TotalItemCount;
+    }
+
+        <!-- Display Total Results and Current Page -->
+        <div class="mb-3">
+            <p>Showing @firstItem - @lastItem of @Model.Results.TotalItemCount results.</p>
+            <p>Page @Model.Results.PageNumber of @Model.Results.PageCount</p>
+        </div>
+
+        <!-- Results Table -->
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="table-primary">
+                <tr>
+                    <th style="width: 10%;">Verse</th>
+                    <th style="width: 70%;">Text</th>
+                    <th style="width: 20%;" class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var verse in Model.Results)
+            {
+                    <tr>
+                        <td class="text-center">@verse.VerseNumber</td>
+                        <td>
+                        @Html.Raw(
+                                     Model.ActionName == "SearchByKeyword"
+                                     ? HighlightKeyword(verse.Text, Model.Keyword)
+                                     : System.Net.WebUtility.HtmlEncode(verse.Text) // No highlighting for ReferenceSearch
+                                 )
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="VerseDetails" asp-route-id="@verse.Id" class="btn btn-sm btn-info">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+            }
+            </tbody>
+        </table>
+
+        <!-- Pagination Controls -->
+    @Html.PagedListPager(Model.Results, page => Url.Action(Model.ActionName, new
+        {
+            keyword = Model.ActionName == "SearchByKeyword" ? Model.Keyword : null,
+            testament = Model.ActionName == "ReferenceSearch" ? (Model.Testament ?? "All Testaments") : null,
+            bookId = Model.BookId > 0 ? Model.BookId : null,
+            chapter = Model.Chapter > 0 ? Model.Chapter : null,
+            page
+        }), new PagedListRenderOptions
+{
+    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+    DisplayLinkToNextPage = PagedListDisplayMode.Always
+})
+}
+else
+{
+        <p class="text-muted">
+        @(Model.ActionName == "SearchByKeyword"
+                ? "No verses found for the specified keyword."
+                : "No verses found for the specified reference.")
+        </p>
+}

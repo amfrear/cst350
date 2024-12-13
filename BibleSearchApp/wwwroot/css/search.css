@@ -263,6 +263,59 @@ tr:hover {
     background-color: #f9f9f9;
 }
 
+/* Highlighting for any span with the 'highlight' class */
+span.highlight {
+    background-color: #ffeeba; /* Soft yellow background */
+    color: #856404; /* Brown text for better contrast */
+    font-weight: bold;
+    padding: 0 4px; /* Reduce padding for a cleaner look */
+    border-radius: 4px; /* Slightly round edges */
+}
+
+.results-list .card {
+    border: 1px solid #ddd; /* Add a border to cards */
+    border-radius: 8px; /* Rounded corners */
+}
+
+    .results-list .card + .card {
+        margin-top: 15px; /* Add space between cards */
+    }
+
+.pagination-container {
+    display: flex;
+    justify-content: center; /* Center-align the pagination */
+    margin-top: 20px;
+}
+
+    .pagination-container .pagination {
+        display: inline-flex;
+        gap: 5px; /* Add spacing between pagination items */
+        padding: 0;
+        list-style: none;
+    }
+
+        .pagination-container .pagination li {
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+            .pagination-container .pagination li a,
+            .pagination-container .pagination li span {
+                color: #2d89ef;
+                text-decoration: none;
+                padding: 8px 12px; /* Larger padding for better clickability */
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                transition: all 0.3s ease-in-out;
+            }
+
+                .pagination-container .pagination li a:hover,
+                .pagination-container .pagination li span.current {
+                    background-color: #2d89ef; /* Highlight current or hovered item */
+                    color: #fff;
+                    border: 1px solid #2d89ef;
+                }
+
 /****************************
     Edit Note Page
 ****************************/

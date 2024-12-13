@@ -1,0 +1,71 @@
+﻿@model BibleSearchApp.ViewModels.SearchViewModel
+
+<div class="search-section">
+    <h1 class="highlight">Search for Bible Verses</h1>
+    <form id="searchForm" method="get" asp-action="SearchByKeyword" asp-controller="Search">
+        <!-- Testament Dropdown -->
+        <div class="form-group">
+            <label for="testamentDropdown">Testament:</label>
+            <select name="testament" id="testamentDropdown" class="form-select">
+                @foreach (var testament in Model.Testaments)
+                {
+                    if (testament == Model.KeywordTestament)
+                    {
+                                <option value="@testament" selected>@testament</option>
+                    }
+                    else
+                    {
+                                <option value="@testament">@testament</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <!-- Book Dropdown -->
+        <div class="form-group">
+            <label for="bookDropdown">Book:</label>
+            <select name="bookId" id="bookDropdown" class="form-select">
+                <option value="">All Books</option>
+                @foreach (var book in Model.Books)
+                {
+                    if (book.Id == Model.KeywordBookId)
+                    {
+                                <option value="@book.Id" selected>@book.Name</option>
+                    }
+                    else
+                    {
+                                <option value="@book.Id">@book.Name</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <!-- Chapter Dropdown -->
+        <div class="form-group">
+            <label for="chapterDropdown">Chapter:</label>
+            <select name="chapter" id="chapterDropdown" class="form-select">
+                <option value="">All Chapters</option>
+                @for (int i = 1; i <= Model.ChapterCounts.GetValueOrDefault(Model.KeywordBookId ?? 0, 150); i++)
+                {
+                    if (i == Model.KeywordChapter)
+                    {
+                                <option value="@i" selected>@i</option>
+                    }
+                    else
+                    {
+                                <option value="@i">@i</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <!-- Keyword Input -->
+        <div class="form-group">
+            <label for="keyword">Keyword:</label>
+            <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Enter keyword..." value="@Model.Keyword" />
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
