@@ -118,14 +118,15 @@ Notes are removed seamlessly using AJAX.
 ## Summary of Key Concepts
 
 ### Application Design and Development
-Developing the BibleSearchApp deepened my understanding of the Model-View-Controller (MVC) architecture, separating concerns between models, views, and controllers. Modeling database relationships allowed efficient storage and retrieval of Bible-related data, such as books, verses, and notes.
+Developing the BibleSearchApp provided me with valuable experience in planning and structuring a software project. Creating UML diagrams, wireframes, and an ER diagram helped me approach the application systematically. These design documents allowed me to anticipate potential issues and stay organized throughout the process. I also deepened my understanding of the Model-View-Controller (MVC) architecture, which helped me cleanly separate concerns. By organizing the application into models, views, and controllers, I was able to focus on designing intuitive user interfaces, managing complex logic, and maintaining efficient data access.
 
-### AJAX Integration
-One of the most rewarding aspects was implementing AJAX for dynamic features like search results and note management. This made the application more responsive and user-friendly by reducing page reloads.
+### Database Design and Relationships
+The BibleSearchApp required me to design and implement a relational database to store books, verses, and user notes. This was an excellent opportunity to enhance my skills in database design, particularly in modeling relationships and writing efficient queries. The experience of linking related data, such as connecting notes to specific verses, taught me how to structure databases for easy data retrieval and scalability.
 
-### Purpose and Impact
-The BibleSearchApp aims to provide a user-friendly tool for studying scripture. By enabling keyword and reference searches, along with note-taking capabilities, it enhances personal study and group discussions. The project’s focus on usability ensures it meets real-world needs effectively.
+### AJAX Integration and User Experience
+One of the most rewarding aspects of this project was implementing AJAX for features like search results and note management. By using AJAX, I was able to create a more responsive and modern application that updates dynamically without full-page reloads. Integrating JavaScript with server-side ASP.NET Core controllers gave me a clearer understanding of how to handle asynchronous client-server communication effectively. This experience improved my ability to create applications that feel smooth and user-friendly.
 
-This project strengthened my skills in database design, MVC architecture, and AJAX-based client-server communication while contributing to an impactful tool for the Christian community.
+### Real-World Relevance and Impact
+The purpose of this project was particularly meaningful to me, as the BibleSearchApp is designed to address real-world needs. By providing features like keyword and reference searches and allowing users to annotate verses with personal notes, the app supports both personal Bible study and group discussions. Knowing that this tool could enhance accessibility and spiritual growth made the development process more fulfilling and gave me a deeper appreciation for the impact of well-designed software.
 
 ---
