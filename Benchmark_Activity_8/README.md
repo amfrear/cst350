@@ -15,19 +15,19 @@
 ### 1. UML Diagram
 The UML diagram illustrates the structure of the application, including classes, properties, and methods.
 
-<img src="BibleSearchApp%20UML.png" width="700"/>
+<img src="BibleSearchApp_UML.png" width="700"/>
 *The application structure is well-defined through this UML diagram.*
 
 ### 2. Wireframes
 The wireframes represent the user interface design for the application.
 
-<img src="BibleSearchApp%20Wireframe.png" width="700"/>
+<img src="BibleSearchApp_Wireframe.png" width="700"/>
 *The user interface plan provides a clear vision of the layout and navigation.*
 
 ### 3. ER Diagram
 The ER diagram outlines the database structure, showing relationships between tables (`asv_books`, `asv_verses`, and `notes`).
 
-<img src="BibleDb%20EER.png" width="700"/>
+<img src="BibleDb_EER.png" width="700"/>
 *The ER diagram defines database relationships clearly.*
 
 ---
