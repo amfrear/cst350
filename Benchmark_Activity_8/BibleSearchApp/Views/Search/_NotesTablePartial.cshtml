@@ -1,0 +1,63 @@
+﻿@model IEnumerable<BibleSearchApp.Models.NoteViewModel>
+
+@* 
+    -----------------------------------------------------------------------
+    BibleSearchApp
+
+    File: _NotesTablePartial.cshtml
+    Description: Partial view responsible for displaying a table of notes associated with a specific Bible verse.
+                 Includes functionalities to edit and delete notes via buttons that trigger corresponding JavaScript actions.
+    Author: Alex Frear
+    Created: 2024-04-27
+    License: MIT License
+    -----------------------------------------------------------------------
+*@
+
+<div class="table-responsive mt-4">
+    <table class="table table-striped table-bordered shadow-sm">
+        <thead class="table-primary">
+            <tr>
+                <th>Note</th>
+                <th class="text-center" style="width: 20%;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @* Check if the model contains any notes *@
+            @if (Model != null && Model.Any())
+            {
+                @* Iterate through each note in the model and render a table row *@
+                foreach (var note in Model)
+                {
+                            <tr>
+                                <td>@note.Content</td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                @* Edit Note Button *@
+                                        <button type="button" 
+                                                class="btn btn-sm btn-warning edit-note-btn" 
+                                                data-note-id="@note.Id" 
+                                                data-note-content="@note.Content">
+                                            Edit
+                                        </button>
+
+                                @* Delete Note Button *@
+                                        <button type="button" 
+                                                class="btn btn-sm btn-danger delete-note-btn" 
+                                                data-note-id="@note.Id">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                }
+            }
+            else
+            {
+                @* Display a message when there are no notes available *@
+                    <tr>
+                        <td colspan="2" class="text-center text-muted">No notes available for this verse.</td>
+                    </tr>
+            }
+        </tbody>
+    </table>
+</div>

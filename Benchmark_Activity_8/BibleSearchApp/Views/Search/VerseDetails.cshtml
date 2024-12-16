@@ -1,0 +1,174 @@
+﻿@model BibleSearchApp.Models.VerseDetailsViewModel
+
+@* 
+    -----------------------------------------------------------------------
+    BibleSearchApp
+
+    File: VerseDetails.cshtml
+    Description: View responsible for displaying detailed information about a specific Bible verse.
+                 Includes functionalities to view and manage notes associated with the verse,
+                 such as editing existing notes and adding new ones. Utilizes partial views
+                 and AJAX for dynamic content updates without full page reloads.
+    Author: Alex Frear
+    Created: 2024-04-27
+    License: MIT License
+    -----------------------------------------------------------------------
+*@
+
+@* 
+    Styles Section: Includes custom CSS specific to the search functionalities.
+    Ensures that the view adheres to the application's styling guidelines.
+    The "asp-append-version" attribute appends a unique version query string to the file, aiding in cache busting.
+*@ 
+@section Styles {
+        <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+}
+
+@* 
+    Scripts Section: Includes custom JavaScript files necessary for handling notes functionalities.
+    - "notesHandler.js": Manages AJAX requests for adding and editing notes.
+    - Inline scripts can be added here if needed for additional client-side logic.
+*@ 
+@section Scripts {
+        <script src="~/js/notesHandler.js" asp-append-version="true"></script>
+}
+
+@* 
+    Main Container: Houses all sections related to verse details and notes.
+    Utilizes Bootstrap classes for responsive design and proper alignment.
+*@ 
+<div class="container">
+
+    @* 
+        Verse Details Section: Displays the specific Bible verse's details, including its location and text.
+        Utilizes Bootstrap card components for a clean and organized layout.
+    *@
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            @* 
+                Verse Header: Shows the Book name, Chapter, and Verse number in a highlighted format.
+            *@
+            <h3 class="card-title highlight">[ @Model.BookName @Model.Chapter:@Model.VerseNumber ]</h3>
+
+            @* 
+                Verse Text: Displays the content of the verse.
+            *@
+            <p class="card-text">@Model.Text</p>
+        </div>
+    </div>
+
+    @* 
+        Notes Section: Displays a list of notes associated with the verse.
+        Utilizes the "_NotesTablePartial.cshtml" partial view to render the notes table.
+    *@
+    <div class="notes-section">
+        <h3 class="card-title highlight">Notes</h3>
+        @* 
+            Render the "_NotesTablePartial.cshtml" partial view, passing the Notes collection from the ViewModel.
+            This partial handles the display of the notes table with functionalities like editing and deleting notes.
+        *@
+        <div id="notes-container">
+            @await Html.PartialAsync("_NotesTablePartial", Model.Notes)
+        </div>
+    </div>
+
+    @* 
+        Edit Note Modal: A Bootstrap modal dialog that allows users to edit existing notes.
+        The modal is triggered via JavaScript when a user opts to edit a specific note.
+    *@
+    <div class="modal fade" id="editNoteModal" tabindex="-1" aria-labelledby="editNoteModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+                    @* 
+                Modal Title: Indicates the purpose of the modal.
+            *@
+            <h5 class="modal-title" id="editNoteModalLabel">Edit Note</h5>
+
+                    @* 
+                Close Button: Allows users to close the modal without saving changes.
+            *@
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+                @* 
+              Modal Body: Contains the form for editing the note content.
+              Submission is handled via AJAX to update the note without reloading the page.
+          *@
+          <div class="modal-body">
+            <form id="edit-note-form">
+                        @* 
+                  Hidden Input: Stores the unique identifier of the note being edited.
+                  Ensures that the correct note is updated upon form submission.
+              *@
+              <input type="hidden" id="edit-note-id" name="noteId" />
+
+                        @* 
+                  Note Content Field: Allows users to modify the content of the note.
+                  Utilizes a textarea for multiline input and enforces validation with the "required" attribute.
+              *@
+              <div class="mb-3">
+                <label for="edit-note-content" class="form-label">Note Content</label>
+                <textarea id="edit-note-content" name="content" class="form-control" rows="4" required></textarea>
+              </div>
+            </form>
+          </div>
+
+                @* 
+              Modal Footer: Provides buttons for canceling or saving changes.
+              - "Cancel" closes the modal without saving.
+              - "Save Changes" submits the form to update the note via AJAX.
+          *@
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button id="save-edit-btn" type="button" class="btn btn-primary">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @* 
+        Add Note Form: Allows users to add new notes associated with the verse.
+        Submission is handled via AJAX to add the note without reloading the page.
+    *@
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h3 class="card-title highlight">Add a Note</h3>
+            @* 
+                Form for adding a new note. Submission is managed via JavaScript to perform an AJAX request.
+            *@
+            <form id="add-note-form">
+                @* 
+                    Hidden Input: Stores the unique identifier of the verse to which the note is being added.
+                    Ensures that the note is correctly associated with the verse upon submission.
+                *@
+                <input type="hidden" name="verseId" value="@Model.Id" />
+
+                @* 
+                    Note Content Field: Allows users to input the content of the new note.
+                    Utilizes a textarea for multiline input and enforces validation with the "required" attribute.
+                *@
+                <textarea name="content" class="form-control mb-3" rows="4" placeholder="Add your note here..." required></textarea>
+
+                @* 
+                    Submit Button: Initiates the process of adding the new note via AJAX.
+                *@
+                <button type="submit" class="btn btn-primary">Add Note</button>
+            </form>
+        </div>
+    </div>
+
+    @* 
+        Back to Chapter Button: Provides a navigation link for users to return to the chapter view.
+        Utilizes tag helpers to define the target action, controller, and route parameters.
+    *@
+    <div class="mt-3">
+        <a asp-action="ReferenceSearch"
+           asp-controller="Search"
+           asp-route-bookId="@Model.BookId"
+           asp-route-chapter="@Model.Chapter"
+           class="btn btn-secondary">
+            Back to Chapter
+        </a>
+    </div>
+</div>

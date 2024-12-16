@@ -3,42 +3,107 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    @* 
+        -----------------------------------------------------------------------
+        BibleSearchApp
+
+        File: _Layout.cshtml
+        Description: The master layout view for the BibleSearchApp application.
+                     Defines the common HTML structure, including the head, header,
+                     footer, and sections for styles and scripts. Utilizes Bootstrap
+                     for responsive design and includes necessary CSS and JavaScript files.
+        Author: Alex Frear
+        Created: 2024-04-27
+        License: MIT License
+        -----------------------------------------------------------------------
+    *@
+
     <title>@ViewData["Title"] - BibleSearchApp</title>
+
+    @* 
+        Stylesheets:
+        - Bootstrap CSS for responsive design and pre-defined styles.
+        - site.css for general site-wide custom styles.
+        - search.css for search-specific custom styles.
+        - @RenderSection("Styles", required: false) allows individual views to inject additional styles.
+    *@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
     @RenderSection("Styles", required: false)
 </head>
 <body>
+    @* 
+        Header Section: Contains the navigation bar with branding and navigation links.
+        Utilizes Bootstrap's navbar components for responsiveness and styling.
+    *@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+
+                @* 
+                    Brand Link: Navigates to the Home page by targeting the "Index" action in the "Home" controller.
+                *@
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BibleSearchApp</a>
+
+                @* 
+                    Navbar Toggler: Button for collapsing the navbar content on smaller screens.
+                *@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
+                @* 
+                    Navbar Links: Contains navigation links. Currently includes a link to the "SearchByKeyword" action in the "Search" controller labeled as "Home".
+                    Additional navigation links can be added here as needed.
+                *@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="SearchByKeyword">Home</a>
                         </li>
+                        @* 
+                            Example of adding more navigation links:
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Search" asp-action="ReferenceSearch">Reference Search</a>
+                            </li>
+                        *@
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
+    @* 
+        Main Content Area: Renders the body of the individual views.
+        Utilizes Bootstrap's container class for proper alignment and spacing.
+    *@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+    @* 
+        Footer Section: Displays the footer with copyright 
+        and a link to the Privacy policy.
+        Utilizes Bootstrap's footer classes for styling.
+    *@
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2024 - BibleSearchApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    @* 
+        JavaScript Files:
+        - jQuery for DOM manipulation and AJAX operations.
+        - Bootstrap's JavaScript bundle for interactive components like modals and dropdowns.
+        - site.js for general site-wide JavaScript functionalities.
+        - @await RenderSectionAsync("Scripts", required: false) allows individual views to inject additional scripts.
+    *@
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

@@ -1,0 +1,43 @@
+﻿@model BibleSearchApp.ViewModels.PagedSearchResultsViewModel
+
+@* 
+    -----------------------------------------------------------------------
+    BibleSearchApp
+
+    File: ReferenceSearch.cshtml
+    Description: View responsible for displaying reference-based search results for Bible verses.
+                 Utilizes the "_SearchResultsPartial.cshtml" partial view to render the results table with pagination.
+    Author: Alex Frear
+    Created: 2024-04-27
+    License: MIT License
+    -----------------------------------------------------------------------
+*@
+
+@* 
+    Set the title of the page to "Reference Search Results".
+    This will be reflected in the browser's title bar and any layout views that utilize ViewData["Title"].
+*@ 
+@{
+    ViewData["Title"] = "Reference Search Results";
+}
+
+@* 
+    Styles Section: Includes custom CSS specific to the search functionalities.
+    Ensures that the view adheres to the application's styling guidelines.
+    The "asp-append-version" attribute appends a unique version query string to the file, aiding in cache busting.
+*@ 
+@section Styles {
+        <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+}
+
+@* 
+    Main Container: Houses the search results partial view.
+    Utilizes Bootstrap's container class for responsive design and proper alignment.
+*@ 
+<div class="container">
+    @* 
+        Render the "_SearchResultsPartial.cshtml" partial view, passing the current model.
+        This partial handles the display of the search results table along with pagination controls.
+    *@
+    @await Html.PartialAsync("_SearchResultsPartial", Model)
+</div>

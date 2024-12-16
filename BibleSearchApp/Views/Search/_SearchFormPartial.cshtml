@@ -1,9 +1,32 @@
 ﻿@model BibleSearchApp.ViewModels.SearchViewModel
 
-<div class="search-section">
+@* 
+    -----------------------------------------------------------------------
+    BibleSearchApp
+
+    File: _SearchFormPartial.cshtml
+    Description: Partial view responsible for rendering the search form used to find Bible verses.
+                 Includes dropdowns for Testament, Book, and Chapter selections, 
+                 as well as a keyword input field and a submit button.
+    Author: Alex Frear
+    Created: 2024-04-27
+    License: MIT License
+    -----------------------------------------------------------------------
+*@
+
+<div id="bibleSearchSection" class="search-section">
     <h1 class="highlight">Search for Bible Verses</h1>
+    @* 
+        Search Form: Submits GET requests to the "SearchByKeyword" action 
+        in the "Search" controller with the selected search parameters.
+    *@
     <form id="searchForm" method="get" asp-action="SearchByKeyword" asp-controller="Search">
+
         <!-- Testament Dropdown -->
+        @* 
+            Dropdown for selecting the Testament ("Old", "New", "All Testaments").
+            Populated from the Testaments collection in the ViewModel.
+        *@
         <div class="form-group">
             <label for="testamentDropdown">Testament:</label>
             <select name="testament" id="testamentDropdown" class="form-select">
@@ -22,6 +45,10 @@
         </div>
 
         <!-- Book Dropdown -->
+        @* 
+            Dropdown for selecting a specific Book.
+            Includes an option for "All Books" and populates options from the Books collection in the ViewModel.
+        *@
         <div class="form-group">
             <label for="bookDropdown">Book:</label>
             <select name="bookId" id="bookDropdown" class="form-select">
@@ -41,10 +68,19 @@
         </div>
 
         <!-- Chapter Dropdown -->
+        @* 
+            Dropdown for selecting a specific Chapter.
+            Includes an option for "All Chapters" and populates options based on the selected Book's chapter count.
+            Utilizes the ChapterCounts dictionary from the ViewModel to determine the number of chapters per book.
+        *@
         <div class="form-group">
             <label for="chapterDropdown">Chapter:</label>
             <select name="chapter" id="chapterDropdown" class="form-select">
                 <option value="">All Chapters</option>
+                @* 
+                    Dynamically generate chapter options based on the selected Book's chapter count.
+                    Defaults to 150 chapters if no specific book is selected.
+                *@
                 @for (int i = 1; i <= Model.ChapterCounts.GetValueOrDefault(Model.KeywordBookId ?? 0, 150); i++)
                 {
                     if (i == Model.KeywordChapter)
@@ -60,12 +96,20 @@
         </div>
 
         <!-- Keyword Input -->
+        @* 
+            Text input for entering a keyword to search within Bible verses.
+            Preserves the entered keyword across form submissions by binding to the ViewModel's Keyword property.
+        *@
         <div class="form-group">
             <label for="keyword">Keyword:</label>
             <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Enter keyword..." value="@Model.Keyword" />
         </div>
 
         <!-- Submit Button -->
+        @* 
+            Button to submit the search form.
+            Initiates the search based on the selected parameters and entered keyword.
+        *@
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
 </div>

@@ -1,0 +1,173 @@
+﻿@using X.PagedList.Mvc.Core
+@model BibleSearchApp.ViewModels.PagedSearchResultsViewModel
+
+@* 
+    -----------------------------------------------------------------------
+    BibleSearchApp
+    
+    File: _SearchResultsPartial.cshtml
+    Description: Partial view responsible for displaying paginated search results for Bible verses.
+                 Supports both keyword-based and reference-based search functionalities.
+                 Includes highlighting of keywords in verse texts and pagination controls.
+    Author: Alex Frear
+    Created: 2024-04-27
+    License: MIT License
+    -----------------------------------------------------------------------
+*@
+
+@* 
+    This section defines a helper function to highlight keywords within verse texts.
+    It ensures that the text is encoded to prevent XSS attacks and that the keyword
+    is properly escaped for regex operations.
+*@
+
+@functions {
+    /// <summary>
+    /// Highlights occurrences of a specified keyword within the provided text.
+    /// </summary>
+    /// <param name="text">The text in which to highlight the keyword.</param>
+    /// <param name="keyword">The keyword to highlight.</param>
+    /// <returns>
+    /// Returns the text with the keyword occurrences wrapped in a span with the "highlight" class.
+    /// If the keyword is null or empty, returns the HTML-encoded original text.
+    /// </returns>
+    public string HighlightKeyword(string text, string keyword)
+    {
+        if (string.IsNullOrEmpty(keyword))
+            return System.Net.WebUtility.HtmlEncode(text); // Encode to prevent XSS
+
+        // Escape special characters in the keyword to prevent regex errors
+        string escapedKeyword = System.Text.RegularExpressions.Regex.Escape(keyword);
+
+        // Define the regex pattern for whole word, case-insensitive search
+        string pattern = $@"\b({escapedKeyword})\b";
+        string replacement = "<span class=\"highlight\">$1</span>";
+
+        // Perform the replacement with case-insensitive option
+        string highlightedText = System.Text.RegularExpressions.Regex.Replace(
+            System.Net.WebUtility.HtmlEncode(text), // Encode the original text
+            pattern,
+            replacement,
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase
+        );
+
+        return highlightedText;
+    }
+}
+
+@* 
+    Check if there are any search results to display.
+    If results exist, render the table of verses along with pagination controls.
+    Otherwise, display a message indicating no verses were found.
+*@
+
+@if (Model.Results != null && Model.Results.Any())
+{
+    @* 
+        Calculate the range of items being displayed on the current page.
+        This helps in informing the user about the current subset of results.
+    *@    
+        var firstItem = (Model.Results.PageNumber - 1) * Model.Results.PageSize + 1;
+        var lastItem = Model.Results.PageNumber * Model.Results.PageSize;
+
+        if (lastItem > Model.Results.TotalItemCount)
+        {
+            lastItem = Model.Results.TotalItemCount;
+        }    
+
+    @* 
+        Results Section Header: Displays whether the results are from a keyword search or a reference search.
+    *@
+    <h3>
+        @if (Model.ActionName == "SearchByKeyword")
+        {
+            <span class="text-primary">Keyword Search Results</span>
+        }
+        else if (Model.ActionName == "ReferenceSearch")
+        {
+            <span class="text-primary">Reference Search Results</span>
+        }
+    </h3>
+
+    @* 
+        Display Total Results and Current Page Information.
+        Informs the user about the number of results being shown and the current page out of total pages.
+    *@
+    <div class="result-info">
+        <p>Showing <strong>@firstItem - @lastItem</strong> of <strong>@Model.Results.TotalItemCount</strong> results</p>
+        <p>Page <strong>@Model.Results.PageNumber</strong> of <strong>@Model.Results.PageCount</strong></p>
+    </div>
+
+    @* 
+        Results Table: Displays the list of verses with their respective numbers, texts, and action buttons.
+        The text column highlights the searched keyword if applicable.
+    *@
+    <table class="table table-bordered table-hover shadow-sm">
+        <thead class="table-primary">
+            <tr>
+                <th style="width: 10%;">Verse</th>
+                <th style="width: 70%;">Text</th>
+                <th style="width: 20%;" class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var verse in Model.Results)
+            {
+                <tr>
+                    <td class="text-center">@verse.VerseNumber</td>
+                    <td>
+                        @Html.Raw(
+                            Model.ActionName == "SearchByKeyword"
+                                ? HighlightKeyword(verse.Text, Model.Keyword)
+                                : System.Net.WebUtility.HtmlEncode(verse.Text) // No highlighting for ReferenceSearch
+                        )
+                    </td>
+                    <td class="text-center">
+                        @* 
+                            Link to view detailed information about the verse.
+                            Utilizes tag helpers to route to the VerseDetails action with the verse ID.
+                        *@
+                        <a asp-action="VerseDetails" asp-route-id="@verse.Id" class="btn btn-sm btn-info">
+                            View Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @* 
+        Pagination Controls: Allows users to navigate through different pages of search results.
+        Configured to always display links to previous and next pages.
+    *@
+    <div class="pagination-container">
+        @Html.PagedListPager(
+            Model.Results, 
+            page => Url.Action(Model.ActionName, new
+            {
+                keyword = Model.ActionName == "SearchByKeyword" ? Model.Keyword : null,
+                testament = Model.ActionName == "ReferenceSearch" ? (Model.Testament ?? "All Testaments") : null,
+                bookId = Model.BookId > 0 ? Model.BookId : null,
+                chapter = Model.Chapter > 0 ? Model.Chapter : null,
+                page
+            }), 
+            new PagedListRenderOptions
+            {
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always
+            }
+        )
+    </div>
+}
+else
+{
+    @* 
+        Display a user-friendly message when no verses match the search criteria.
+        Differentiates between keyword-based and reference-based search failures.
+    *@
+    <p class="text-muted">
+        @(Model.ActionName == "SearchByKeyword"
+            ? "No verses found for the specified keyword."
+            : "No verses found for the specified reference.")
+    </p>
+}

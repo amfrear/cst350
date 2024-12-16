@@ -1,0 +1,282 @@
+﻿@using X.PagedList.Mvc.Core
+@model BibleSearchApp.ViewModels.SearchViewModel
+
+@* 
+    -----------------------------------------------------------------------
+    BibleSearchApp
+
+    File: SearchByKeyword.cshtml
+    Description: View responsible for handling keyword-based searches for Bible verses.
+                 Incorporates both keyword and reference search functionalities within the same page.
+                 Utilizes partial views to render search forms and results, and handles AJAX-based updates.
+    Author: Alex Frear
+    Created: 2024-04-27
+    License: MIT License
+    -----------------------------------------------------------------------
+*@
+
+@* 
+    Set the title of the page to "Keyword Search".
+    This will be reflected in the browser's title bar and any layout views that utilize ViewData["Title"].
+*@ 
+@{
+    ViewData["Title"] = "Keyword Search";
+}
+
+@* 
+    Styles Section: Includes custom CSS specific to the search functionalities.
+    Ensures that the view adheres to the application's styling guidelines.
+    The "asp-append-version" attribute appends a unique version query string to the file, aiding in cache busting.
+*@ 
+@section Styles {
+        <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+}
+
+@* 
+    Provide JSON data for Keyword Search.
+    These scripts store serialized JSON data of Books and ChapterCounts from the ViewModel.
+    Useful for client-side scripts to dynamically populate dropdowns or perform other operations.
+*@ 
+<script id="booksData" type="application/json">
+    @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Books))
+</script>
+<script id="chapterCountsData" type="application/json">
+    @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChapterCounts))
+</script>
+
+@* 
+    Provide JSON data for Reference Search.
+    Similar to the Keyword Search data, these scripts store serialized JSON data for books and chapter counts.
+*@ 
+<script id="refBooksData" type="application/json">
+    @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Books))
+</script>
+<script id="refChapterCountsData" type="application/json">
+    @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChapterCounts))
+</script>
+
+@* 
+    Main Container: Houses both Keyword and Reference Search sections.
+    Utilizes Bootstrap classes for responsive design and proper alignment.
+*@ 
+<div class="search-page-container">
+
+    @* 
+        Keyword Search Section: Renders the search form for keyword-based searches.
+        Utilizes the "_SearchFormPartial.cshtml" partial view, passing the current model.
+    *@ 
+    <div class="search-section">
+        @Html.Partial("_SearchFormPartial", Model)
+    </div>
+
+    @* 
+        Reference Search Section: Provides a separate form for reference-based searches.
+        Allows users to search for verses based on Testament, Book, and Chapter.
+    *@ 
+    <div class="reference-section">
+        <h1 class="highlight">Reference Search</h1>
+        @* 
+            Reference Search Form: Submits GET requests to the "ReferenceSearch" action 
+            in the "Search" controller with the selected search parameters.
+        *@ 
+        <form id="referenceSearchForm" method="get" asp-action="ReferenceSearch" asp-controller="Search">
+
+            @* 
+                Testament Dropdown: Allows users to select a Testament ("Old", "New").
+                Populates options from the Testaments collection in the ViewModel.
+            *@ 
+            <div class="form-group mb-3">
+                <label for="refTestamentDropdown">Testament:</label>
+                <select name="testament" id="refTestamentDropdown" class="form-select">
+                    @foreach (var testament in Model.Testaments)
+                    {
+                            <option value="@testament">@testament</option>
+                    }
+                </select>
+            </div>
+
+            @* 
+                Book Dropdown: Allows users to select a specific Book.
+                Includes an option to "Select Book" and populates options from the Books collection in the ViewModel.
+            *@ 
+            <div class="form-group mb-3">
+                <label for="refBookDropdown">Book:</label>
+                <select name="bookId" id="refBookDropdown" class="form-select">
+                    <option value="">Select Book</option>
+                    @foreach (var book in Model.Books)
+                    {
+                            <option value="@book.Id">@book.Name</option>
+                    }
+                </select>
+            </div>
+
+            @* 
+                Chapter Dropdown: Allows users to select a specific Chapter.
+                Includes an option to "Select Chapter" and populates options from 1 to 150.
+                The actual number of chapters per book can be dynamically adjusted via client-side scripts using the provided JSON data.
+            *@ 
+            <div class="form-group mb-3">
+                <label for="refChapterDropdown">Chapter:</label>
+                <select name="chapter" id="refChapterDropdown" class="form-select">
+                    <option value="">Select Chapter</option>
+                    @for (int i = 1; i <= 150; i++)
+                    {
+                            <option value="@i">@i</option>
+                    }
+                </select>
+            </div>
+
+            @* 
+                Submit Button: Initiates the reference-based search based on selected parameters.
+            *@ 
+            <button type="submit" class="btn btn-primary">View Chapter</button>
+        </form>
+    </div>
+</div>
+
+@* 
+    Container for AJAX-updated Keyword Search results.
+    Initially renders the "_SearchResultsPartial.cshtml" partial view with keyword search results.
+    The content of this container is dynamically updated via AJAX calls upon form submissions or pagination.
+*@ 
+<div id="searchResultsContainer">
+    @Html.Partial("_SearchResultsPartial", new BibleSearchApp.ViewModels.PagedSearchResultsViewModel
+{
+    Results = Model.KeywordResults,
+    Testament = Model.KeywordTestament,
+    BookId = Model.KeywordBookId,
+    Chapter = Model.KeywordChapter,
+    ActionName = "SearchByKeyword",
+    Keyword = Model.Keyword // Pass the Keyword here for highlighting
+})
+</div>
+
+@* 
+    Container for AJAX-updated Reference Search results.
+    Initially renders the "_ReferenceSearchResultsPartial.cshtml" partial view with reference search results.
+    The content of this container is dynamically updated via AJAX calls upon form submissions or pagination.
+*@ 
+<div id="referenceSearchResultsContainer">
+    @Html.Partial("_ReferenceSearchResultsPartial", new BibleSearchApp.ViewModels.PagedSearchResultsViewModel
+{
+    Results = Model.ReferenceResults,
+    Testament = Model.ReferenceTestament,
+    BookId = Model.ReferenceBookId,
+    Chapter = Model.ReferenceChapter,
+    ActionName = "ReferenceSearch"
+})
+</div>
+
+@* 
+    Scripts Section: Includes JavaScript files and inline scripts necessary for handling AJAX-based form submissions 
+    and dynamic updates of search results. Utilizes jQuery for DOM manipulation and AJAX calls.
+*@ 
+@section Scripts {
+    @* 
+        Include the custom JavaScript file responsible for handling dropdown dependencies 
+        (e.g., populating chapters based on selected books).
+    *@
+        <script src="~/js/dropdownHandler.js"></script>
+
+    @* 
+        Inline Script: Handles form submissions and pagination for both Keyword and Reference searches via AJAX.
+        Ensures that the search results are updated dynamically without full page reloads.
+    *@
+        <script>
+            $(document).ready(function () {
+
+                // Handle Keyword Search form submission via AJAX
+                $('#searchForm').submit(function (e) {
+                    e.preventDefault();
+
+                    var form = $(this);
+                    var url = '/Search/SearchByKeyword';
+                    var data = form.serialize(); // Serialize form data into a query string
+
+                    $.ajax({
+                        type: 'GET', // Use GET to send data in the URL
+                        url: url + '?' + data, // Append serialized data to the URL
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        success: function (partialViewResult) {
+                            $('#searchResultsContainer').html(partialViewResult);
+                            initDropdowns('testamentDropdown', 'bookDropdown', 'chapterDropdown', 'booksData', 'chapterCountsData');
+                        },
+                        error: function () {
+                            alert('An error occurred while processing your keyword search.');
+                        }
+                    });
+                });
+
+                // Delegate click event for pagination links in Keyword Search
+                $('#searchResultsContainer').on('click', '.pagination a', function (e) {
+                    e.preventDefault();
+
+                    var url = $(this).attr('href'); // Use the pagination link's URL directly
+
+                    $.ajax({
+                        type: 'GET', // Use GET to fetch the paginated results
+                        url: url,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        success: function (partialViewResult) {
+                            $('#searchResultsContainer').html(partialViewResult);
+                            initDropdowns('testamentDropdown', 'bookDropdown', 'chapterDropdown', 'booksData', 'chapterCountsData');
+                        },
+                        error: function () {
+                            alert('An error occurred while navigating keyword search pages.');
+                        }
+                    });
+                });
+
+                // Handle Reference Search form submission via AJAX
+                $('#referenceSearchForm').submit(function (e) {
+                    e.preventDefault();
+
+                    var form = $(this);
+                    var url = '/Search/ReferenceSearch';
+                    var data = form.serialize(); // Serialize form data into a query string
+
+                    $.ajax({
+                        type: 'GET', // Use GET to send data in the URL
+                        url: url + '?' + data, // Append serialized data to the URL
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        success: function (partialViewResult) {
+                            $('#referenceSearchResultsContainer').html(partialViewResult);
+                            initDropdowns('refTestamentDropdown', 'refBookDropdown', 'refChapterDropdown', 'refBooksData', 'refChapterCountsData');
+                        },
+                        error: function () {
+                            alert('An error occurred while processing your reference search.');
+                        }
+                    });
+                });
+
+                // Delegate click event for pagination links in Reference Search
+                $('#referenceSearchResultsContainer').on('click', '.pagination a', function (e) {
+                    e.preventDefault();
+
+                    var pageUrl = $(this).attr('href');
+                    var url = '/Search/ReferenceSearch';
+                    var queryParams = new URLSearchParams(pageUrl.split('?')[1]);
+
+                    var data = {
+                        testament: queryParams.get('testament') !== "All Testaments" ? queryParams.get('testament') : null,
+                        bookId: queryParams.get('bookId') || null,
+                        chapter: queryParams.get('chapter') || null,
+                        page: queryParams.get('page')
+                    };
+
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        data: data,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        success: function (partialViewResult) {
+                            $('#referenceSearchResultsContainer').html(partialViewResult);
+                        },
+                        error: function () {
+                            alert('An error occurred while navigating reference search pages.');
+                        }
+                    });
+                });
+            });
+        </script>
+}

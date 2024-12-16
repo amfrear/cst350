@@ -1,0 +1,75 @@
+﻿@using X.PagedList.Mvc.Core
+@model BibleSearchApp.ViewModels.PagedSearchResultsViewModel
+
+@* 
+    -----------------------------------------------------------------------
+    BibleSearchApp
+
+    File: _ReferenceSearchResultsPartial.cshtml
+    Description: Partial view responsible for displaying a paginated table of verses based on reference-based search criteria.
+                 Includes functionalities to view verse details and navigate through paginated results.
+    Author: Alex Frear
+    Created: 2024-04-27
+    License: MIT License
+    -----------------------------------------------------------------------
+*@
+
+@* 
+    Check if there are any search results to display.
+    If results exist, render the table of verses along with pagination controls.
+    Otherwise, display a message indicating no verses were found.
+*@
+@if (Model.Results != null && Model.Results.Any())
+{
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="table-primary">
+                <tr>
+                    <th style="width: 10%;">Verse</th>
+                    <th style="width: 70%;">Text</th>
+                    <th style="width: 20%;" class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @* Iterate through each verse in the paginated results and render a table row *@
+            @foreach (var verse in Model.Results)
+            {
+                        <tr>
+                            <td class="text-center">@verse.VerseNumber</td>
+                            <td>@verse.Text</td>
+                            <td class="text-center">
+                        @* Link to view detailed information about the verse *@
+                                <a asp-action="VerseDetails" asp-route-id="@verse.Id" class="btn btn-sm btn-info">
+                                    View Details
+                                </a>
+                            </td>
+                        </tr>
+            }
+            </tbody>
+        </table>
+
+    @* 
+        Render pagination controls using the PagedListPager helper.
+        Allows users to navigate through different pages of search results.
+    *@
+    @Html.PagedListPager(
+                Model.Results,
+                page => Url.Action(
+                    Model.ActionName,
+                    new
+                    {
+                        testament = Model.Testament,
+                        bookId = Model.BookId,
+                        chapter = Model.Chapter,
+                        page
+                    }
+                )
+            )
+}
+else
+{
+    @* 
+        Display a user-friendly message when no verses match the search criteria.
+        Indicates that the search yielded no results based on the selected reference filters.
+    *@
+        <p class="text-muted">No verses found for the selected reference.</p>
+}

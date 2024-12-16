@@ -1,0 +1,68 @@
+﻿@model BibleSearchApp.Models.Note
+
+@* 
+    -----------------------------------------------------------------------
+    BibleSearchApp
+
+    File: EditNote.cshtml
+    Description: View responsible for rendering the "Edit Note" form.
+                 Allows users to update the content of an existing note associated with a specific Bible verse.
+    Author: Alex Frear
+    Created: 2024-04-27
+    License: MIT License
+    -----------------------------------------------------------------------
+*@
+
+@section Styles {
+    @* 
+        Include the custom CSS for search-related styles.
+        Ensures that the view adheres to the application's styling guidelines.
+    *@
+        <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+}
+
+@* 
+    Main Container: Centers the form on the page with a maximum width for better readability.
+*@ 
+<div class="container" style="max-width: 600px;">
+    <div class="card shadow-sm">
+        <div class="card-body">            
+            @* 
+                Form Header: Indicates the purpose of the form.
+            *@
+            <h2 class="card-title highlight text-center">Edit Note</h2>
+
+            @* 
+                Edit Note Form: Submits a POST request to the "EditNote" action in the "Search" controller.
+                Includes fields for updating the note content.
+            *@
+            <form method="post" asp-action="EditNote" asp-controller="Search">
+
+                @* 
+                    Hidden Input: Stores the unique identifier of the note being edited.
+                    Ensures that the correct note is updated upon form submission.
+                *@
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                @* 
+                    Note Content Field: Allows users to modify the content of the note.
+                    Utilizes a textarea for multiline input and enforces validation with the "required" attribute.
+                *@
+                <div class="mb-3">
+                    <label for="noteContent" class="form-label">Note Content</label>
+                    <textarea id="noteContent" name="Content" class="form-control" rows="4" required>@Model.Content</textarea>
+                </div>
+
+                @* 
+                    Form Actions: Provides buttons for submitting the form or canceling the edit.
+                    - "Save Changes" submits the form to update the note.
+                    - "Cancel" redirects the user back to the verse details without making changes.
+                *@
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                    <a asp-action="VerseDetails" asp-controller="Search" asp-route-id="@Model.VerseId" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
